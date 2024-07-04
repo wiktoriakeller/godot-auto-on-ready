@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SourceGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\GodotAutoOnReady.Console\\GodotAutoOnReady.Console.csproj"
+    }
+  }
+}
