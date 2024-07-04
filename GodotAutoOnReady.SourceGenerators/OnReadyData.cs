@@ -1,6 +1,6 @@
-﻿using GodotSourceGenerators.SourceGenerators.Common;
+﻿using GodotAutoOnReady.SourceGenerators.Common;
 
-namespace GodotSourceGenerators.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerators;
 
 internal readonly record struct OnReadyData
 {

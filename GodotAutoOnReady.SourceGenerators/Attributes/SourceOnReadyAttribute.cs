@@ -1,4 +1,4 @@
-﻿namespace GodotSourceGenerators.SourceGenerators.Attributes;
+﻿namespace GodotAutoOnReady.SourceGenerators.Attributes;
 
 internal static class SourceOnReadyAttribute
 {
@@ -7,7 +7,7 @@ internal static class SourceOnReadyAttribute
     #nullable disable
     using System;
 
-    namespace GodotSourceGenerators.SourceGenerators.Attributes
+    namespace GodotAutoOnReady.SourceGenerators.Attributes
     {
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
         internal class OnReadyAttribute : Attribute

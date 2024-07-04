@@ -1,4 +1,4 @@
-﻿namespace GodotSourceGenerators.Console;
+﻿namespace GodotAutoOnReady.Console;
 
 public class BaseItem
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GodotSourceGenerators.SourceGenerators.Builders;
+namespace GodotAutoOnReady.SourceGenerators.Builders;
 
 public class SourceBuilder
 {

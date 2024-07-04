@@ -1,4 +1,4 @@
-﻿using GodotSourceGenerators.Console;
+﻿using GodotAutoOnReady.Console;
 
 Console.WriteLine("Hello, World!");
 

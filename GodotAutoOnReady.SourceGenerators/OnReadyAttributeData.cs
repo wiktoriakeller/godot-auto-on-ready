@@ -1,4 +1,4 @@
-﻿namespace GodotSourceGenerators.SourceGenerators;
+﻿namespace GodotAutoOnReady.SourceGenerators;
 
 internal readonly record struct OnReadyAttributeData
 {

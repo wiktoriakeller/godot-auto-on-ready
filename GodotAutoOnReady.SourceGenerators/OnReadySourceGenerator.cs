@@ -1,13 +1,13 @@
-﻿using GodotSourceGenerators.SourceGenerators.Attributes;
-using GodotSourceGenerators.SourceGenerators.Builders;
-using GodotSourceGenerators.SourceGenerators.Common;
+﻿using GodotAutoOnReady.SourceGenerators.Attributes;
+using GodotAutoOnReady.SourceGenerators.Builders;
+using GodotAutoOnReady.SourceGenerators.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
-namespace GodotSourceGenerators.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerators;
 
 [Generator]
 public class OnReadySourceGenerator : IIncrementalGenerator
@@ -21,7 +21,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "OnReadyInit.g.cs", SourceText.From(SourceOnReadyInitAttribute.Attribute, Encoding.UTF8)));
 
         IncrementalValuesProvider<OnReadyData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
-            "GodotSourceGenerators.SourceGenerators.Attributes.GenerateReadyMethodAttribute",
+            "GodotAutoOnReady.SourceGenerators.Attributes.GenerateReadyMethodAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
             .Where(static m => m is not null && m.Value.Attributes.Count > 0)
@@ -206,7 +206,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             .AddLine("#nullable disable")
             .AddLine()
             .AddLine("using Godot;")
-            .AddLine("using GodotSourceGenerators.SourceGenerators.Attributes;")
+            .AddLine("using GodotAutoOnReady.SourceGenerators.Attributes;")
             .AddLine();
 
         if(onReadyData.ClassNamespace != "")

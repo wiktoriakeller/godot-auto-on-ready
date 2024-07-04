@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace GodotSourceGenerators.SourceGenerators.Common;
+namespace GodotAutoOnReady.SourceGenerators.Common;
 
 /// <summary>
 /// Polyfill for .NET 6 HashCode  

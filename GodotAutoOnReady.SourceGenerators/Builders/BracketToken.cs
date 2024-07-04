@@ -1,4 +1,4 @@
-﻿namespace GodotSourceGenerators.SourceGenerators.Builders;
+﻿namespace GodotAutoOnReady.SourceGenerators.Builders;
 
 enum TokenType
 {

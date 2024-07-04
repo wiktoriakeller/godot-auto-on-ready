@@ -1,6 +1,6 @@
-﻿using GodotSourceGenerators.SourceGenerators.Attributes;
+﻿using GodotAutoOnReady.SourceGenerators.Attributes;
 
-namespace GodotSourceGenerators.Console;
+namespace GodotAutoOnReady.Console;
 
 [GenerateReadyMethod]
 public partial class TestItem : BaseItem
