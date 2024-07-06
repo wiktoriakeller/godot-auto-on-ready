@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,10 @@
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Snapshots\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Verify.DiffPlex" Version="3.0.0" />
@@ -31,6 +35,126 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerators\GodotAutoOnReady.SourceGenerators.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#Sword.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#OnReadyAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#GenerateReadyMethodAttribute.g.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#Sword.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#OnReadyAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#GenerateReadyMethodAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#Sword.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#OnReadyAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#Sword.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#OnReadyAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#GenerateReadyMethodAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#Sword.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#OnReadyAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.received.cs" />
 	</ItemGroup>
 
 </Project>

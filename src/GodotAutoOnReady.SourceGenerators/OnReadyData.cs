@@ -14,6 +14,7 @@ internal readonly record struct OnReadyData
     internal readonly string ClassNamespace;
     internal readonly string BaseClass;
     internal readonly bool HasConstructor;
+    internal readonly bool NullableDisable;
     internal readonly EquatableArray<OnReadyAttributeData> Attributes;
 
     internal OnReadyData(
@@ -24,6 +25,7 @@ internal readonly record struct OnReadyData
         string classNamespace,
         string baseClass,
         bool hasConstructor,
+        bool nullableDisable,
         EquatableArray<OnReadyAttributeData> attributes)
     {
         ClassName = className;
@@ -34,6 +36,7 @@ internal readonly record struct OnReadyData
         BaseClass = baseClass;
         HasConstructor = hasConstructor;
         Attributes = attributes;
+        NullableDisable = nullableDisable;
     }
 
     internal bool CanGenerateReadyMethod() => MethodName == ReadyMethodName && !HasConstructor;

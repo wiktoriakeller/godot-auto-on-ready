@@ -7,7 +7,7 @@ namespace GodotAutoOnReady.Tests;
 
 public class VerifyHelper
 {
-    public static Task Verify(string source)
+    public static Task Verify(string source, bool disableNullable = false)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
         var readyCallbackName = "OnReady";
@@ -17,10 +17,12 @@ public class VerifyHelper
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
         ];
 
+        var nullableContextOptions = disableNullable ? NullableContextOptions.Disable : NullableContextOptions.Enable;
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "Tests",
             syntaxTrees: [ syntaxTree ],
-            references: references);
+            references: references,
+            options: new CSharpCompilationOptions(nullableContextOptions: nullableContextOptions, outputKind: OutputKind.NetModule));
 
         var generator = new OnReadySourceGenerator();
 
@@ -31,12 +33,23 @@ public class VerifyHelper
         {
             var diff = new Differ().CreateWordDiffs(verified, received, true, [' ', '_']);
 
-            if(diff.PiecesOld.Any(x => x.Contains(readyCallbackName) &&
-               diff.DiffBlocks.Count == 1))
+            if(diff.DiffBlocks.Count == 2)
             {
+                foreach(var block in diff.DiffBlocks)
+                {
+                    var startA = diff.DiffBlocks[0].DeleteStartA;
+
+                    if (startA + 2 < diff.PiecesNew.Length &&
+                        (diff.PiecesNew[startA + 1] != "_" ||
+                        !diff.PiecesNew[startA + 2].Contains(readyCallbackName)))
+                    {
+                        return Task.FromResult(new CompareResult(false));
+                    }
+                }
+
                 return Task.FromResult(new CompareResult(true));
             }
- 
+
             return Task.FromResult(new CompareResult(diff.DiffBlocks.Count == 0));
         });
 

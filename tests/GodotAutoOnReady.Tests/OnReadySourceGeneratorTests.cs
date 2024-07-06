@@ -129,4 +129,27 @@ public class OnReadySourceGeneratorTests
 
         await VerifyHelper.Verify(source);
     }
+
+    [Fact]
+    public async Task GeneratesReadyCorrectlyWhenNullableIsDisabled()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.SourceGenerators.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateReadyMethod]
+        public partial class Sword : Node
+        {
+            [OnReady("%SomeProp")]
+            public DummyNode Node { get; set; } = null!;
+        
+            [OnReady("%SomeField")]
+            private DummyNode Field = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source, true);
+    }
 }

@@ -9,17 +9,7 @@ namespace RPGGame
 {
 	public partial class Sword : Node
 	{
-		private Sword()
-		{
-			Ready += etqS8GgsmrLXqdLgxaBh_OnReady;
-		}
-
-		private void etqS8GgsmrLXqdLgxaBh_OnReady()
-		{
-			_Ready();
-		}
-
-		public override void _Ready()
+		public void OnReadyInit()
 		{
 			Node = GetNode<DummyNode>("%SomeProp");
 			Field = GetNode<DummyNode>("%SomeField");

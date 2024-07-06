@@ -8,12 +8,41 @@ public class SourceBuilder
     private Stack<BracketToken> _tokens = [];
     private int _maxIndentation = 0;
 
-    public SourceBuilder AddNamespace(string namespcaeName)
+    public void Reset()
     {
-        _sb.AddLine($"namespace {namespcaeName}")
+        _sb = new();
+        _tokens = [];
+        _maxIndentation = 0;
+    }
+
+    public string BuildSource()
+    {
+        while (_tokens.Count > 0)
+        {
+            var token = _tokens.Pop();
+            _sb.AddIndentation(token.Indentation)
+               .AddLine(token.Bracket);
+        }
+
+        return _sb.ToString();
+    }
+
+    public SourceBuilder AddNamespace(string namespaceName)
+    {
+        _sb.AddLine($"namespace {namespaceName}")
            .AddLine("{");
 
         _tokens.Push(new BracketToken("}", _maxIndentation++, TokenType.Namespace));
+        return this;
+    }
+
+    public SourceBuilder AddNullableDisable(bool nullableDisable)
+    {
+        if (nullableDisable)
+        {
+            _sb.AddLine("#nullable disable", _maxIndentation);
+        }
+
         return this;
     }
 
@@ -48,25 +77,6 @@ public class SourceBuilder
     {
         _sb.AddLine(line, _maxIndentation);
         return this;
-    }
-
-    public void Reset()
-    {
-        _sb = new();
-        _tokens = [];
-        _maxIndentation = 0;
-    }
-
-    public string BuildSource()
-    {
-        while (_tokens.Count > 0)
-        {
-            var token = _tokens.Pop();
-            _sb.AddIndentation(token.Indentation)
-               .AddLine(token.Bracket);
-        }
-
-        return _sb.ToString();
     }
 
     private void CheckShouldAddClosingBracket()
