@@ -82,7 +82,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             {
                 var methodName = methodSyntax.Identifier.ValueText;
 
-                if(methodName == OnReadyData.ReadyMethodName && methodSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword)))
+                if(methodName == OnReadyData.ReadyMethodName)
                 {
                     hasReadyMethod = true;
                 }
