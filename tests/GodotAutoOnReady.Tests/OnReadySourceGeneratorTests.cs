@@ -1,0 +1,32 @@
+﻿namespace GodotAutoOnReady.Tests;
+
+public class OnReadySourceGeneratorTests
+{
+    [Fact]
+    public Task GeneratesEnumExtensionsCorrectly()
+    {
+        var source = """
+        using GodotAutoOnReady.SourceGenerators.Attributes;
+
+        namespace GodotAutoOnReady.Console;
+
+        [GenerateReadyMethod]
+        public partial class TestItem : BaseItem
+        {
+            [OnReady("%path")]
+            public DummyNode Node { get; set; } = null!;
+
+            [OnReady("random path")]
+            public DummyNode Node2 { get; set; } = null!;
+
+            [OnReady("cat")]
+            public DummyNode Prop { get; set; } = null!;
+
+            [OnReady("cat field")]
+            private DummyNode Field = null!;
+        }
+        """;
+
+        return VerifyHelper.Verify(source);
+    }
+}

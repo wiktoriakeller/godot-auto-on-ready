@@ -18,7 +18,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyAttribute.Attribute, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyInit.g.cs", SourceText.From(SourceOnReadyInitAttribute.Attribute, Encoding.UTF8)));
+            "GenerateReadyMethodAttribute.g.cs", SourceText.From(SourceGenerateReadyMethodAttribute.Attribute, Encoding.UTF8)));
 
         IncrementalValuesProvider<OnReadyData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
             "GodotAutoOnReady.SourceGenerators.Attributes.GenerateReadyMethodAttribute",

@@ -402,3 +402,6 @@ FodyWeavers.xsd
 
 ./artifacts
 /GodotSourceGenerators.SourceGenerators/nuget.sourcegen.config
+
+# Verify
+*.received.*

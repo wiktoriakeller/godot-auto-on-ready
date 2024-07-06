@@ -19,7 +19,7 @@ public class SourceBuilder
 
     public SourceBuilder AddClass(string modifiers, string className, string baseClass = "")
     {
-        _sb.Add($"{modifiers} {className}", _maxIndentation)
+        _sb.Add($"{modifiers} class {className}", _maxIndentation)
            .Add(baseClass == "" ? "\n" : $" : {baseClass}\n")
            .AddLine("{", _maxIndentation);
 
