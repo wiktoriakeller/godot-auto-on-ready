@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Console": {
-      "commandName": "Executable",
-      "executablePath": "..\\GodotAutoOnReady.Console\\bin\\Debug\\net8.0\\GodotAutoOnReady.Console.exe"
-    }
-  }
-}

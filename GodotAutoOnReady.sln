@@ -5,9 +5,7 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotAutoOnReady.SourceGenerators", "src\GodotAutoOnReady.SourceGenerators\GodotAutoOnReady.SourceGenerators.csproj", "{9E6C4F47-E84B-4E4A-AB69-1304C42C91F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotAutoOnReady.Console", "src\GodotAutoOnReady.Console\GodotAutoOnReady.Console.csproj", "{49C7C5F4-E7B1-4C75-9863-D48B74AB82B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotAutoOnReady.Tests", "tests\GodotAutoOnReady.Tests\GodotAutoOnReady.Tests.csproj", "{4F01964F-3E0E-4888-B027-0F26A845B62F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotAutoOnReady.Tests", "tests\GodotAutoOnReady.Tests\GodotAutoOnReady.Tests.csproj", "{4F01964F-3E0E-4888-B027-0F26A845B62F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{9E6C4F47-E84B-4E4A-AB69-1304C42C91F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E6C4F47-E84B-4E4A-AB69-1304C42C91F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E6C4F47-E84B-4E4A-AB69-1304C42C91F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49C7C5F4-E7B1-4C75-9863-D48B74AB82B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49C7C5F4-E7B1-4C75-9863-D48B74AB82B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49C7C5F4-E7B1-4C75-9863-D48B74AB82B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49C7C5F4-E7B1-4C75-9863-D48B74AB82B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F01964F-3E0E-4888-B027-0F26A845B62F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F01964F-3E0E-4888-B027-0F26A845B62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F01964F-3E0E-4888-B027-0F26A845B62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
