@@ -9,10 +9,10 @@ public partial class Sword : Node
 {
 	private Sword()
 	{
-		Ready += pdoXhzeD10wZA80OjI8u_OnReady;
+		Ready += e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady;
 	}
 
-	private void pdoXhzeD10wZA80OjI8u_OnReady()
+	private void e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady()
 	{
 		_Ready();
 	}

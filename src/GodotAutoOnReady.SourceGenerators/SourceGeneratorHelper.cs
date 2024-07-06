@@ -1,20 +1,21 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace GodotAutoOnReady.SourceGenerators;
 
 public static class SourceGeneratorHelper
 {
-    public static string GenerateRandomMethodName(int length, string postfix)
+    public static string ComputeHash(string sourceData)
     {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var random = new Random();
-        var sb = new StringBuilder(length);
+        using var sha256 = SHA256.Create();
+        byte[] bytes = sha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(sourceData));
 
-        for (int i = 0; i < length; i++)
+        var sb = new StringBuilder();
+        for (int i = 0; i < bytes.Length; i++)
         {
-            sb.Append(chars[random.Next(chars.Length)]);
+            sb.Append(bytes[i].ToString("x2"));
         }
 
-        return sb.Append(postfix).ToString();
+        return sb.ToString();
     }
 }

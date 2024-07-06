@@ -48,7 +48,8 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             return null;
         }
 
-        bool isNullable = context.SemanticModel.Compilation.Options.NullableContextOptions != NullableContextOptions.Disable;
+        bool disableNullable = context.SemanticModel.Compilation.Options.NullableContextOptions != NullableContextOptions.Disable;
+        var assemblyName = context.SemanticModel.Compilation.AssemblyName ?? classDeclaration.Identifier.Text;
 
         var classModifiers = string.Join(" ", classDeclaration.Modifiers);
         var className = classDeclaration.Identifier.ValueText;
@@ -136,7 +137,8 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             classNamespace,
             baseClass,
             hasConstructor,
-            isNullable,
+            disableNullable,
+            assemblyName,
             new EquatableArray<OnReadyAttributeData>(properties));
     }
 
@@ -220,7 +222,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         GenerateInitializerMethod(onReadyData, builder);
 
         var code = builder.BuildSource();
-
+        
         spc.AddSource($"{onReadyData.ClassName}.g.cs", SourceText.From(code, Encoding.UTF8));
     }
 
@@ -231,7 +233,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         if(onReadyData.CanGenerateReadyMethod())
         {
-            string readySignalHandler = SourceGeneratorHelper.GenerateRandomMethodName(20, "_OnReady");
+            string readySignalHandler = SourceGeneratorHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
 
             //Generate constructor with OnReady handler
             builder.AddMethod("private", onReadyData.ClassName)
