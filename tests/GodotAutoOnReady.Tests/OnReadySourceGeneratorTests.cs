@@ -152,4 +152,29 @@ public class OnReadySourceGeneratorTests
 
         await VerifyHelper.Verify(source, true);
     }
+
+    [Fact]
+    public async Task GeneratesReadyCorrectlyAndCopiesAdditionalNamespaces()
+    {
+        var source = """
+        using Godot;
+        using RPGGame.Components;
+        using RPGGame.Controllers;
+        using GodotAutoOnReady.SourceGenerators.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateReadyMethod]
+        public partial class Sword : Node
+        {
+            [OnReady("%SomeProp")]
+            public DummyNode Node { get; set; } = null!;
+        
+            [OnReady("%SomeField")]
+            private DummyNode Field = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source);
+    }
 }
