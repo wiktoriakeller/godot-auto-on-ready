@@ -11,12 +11,12 @@ namespace GodotAutoOnReady.SourceGenerators.Attributes
     internal class OnReadyAttribute : Attribute
     {
         internal readonly string Path;
-        internal readonly bool IsSceneUnique;
+        internal readonly bool AllowNull;
 
-        internal OnReadyAttribute(string path, bool isSceneUnique = false)
+        internal OnReadyAttribute(string path, bool allowNull = false)
         {
             Path = path;
-            IsSceneUnique = isSceneUnique;
+            AllowNull = allowNull;
         }
     }
 }

@@ -20,7 +20,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
             "GenerateReadyMethodAttribute.g.cs", SourceText.From(SourceGenerateReadyMethodAttribute.Attribute, Encoding.UTF8)));
 
-        IncrementalValuesProvider<OnReadyData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
+        IncrementalValuesProvider<SourceData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
             "GodotAutoOnReady.SourceGenerators.Attributes.GenerateReadyMethodAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
@@ -41,7 +41,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static OnReadyData? GetOnReadyData(GeneratorAttributeSyntaxContext context)
+    private static SourceData? GetOnReadyData(GeneratorAttributeSyntaxContext context)
     {
         if (context.TargetNode is not ClassDeclarationSyntax classDeclaration)
         {
@@ -91,13 +91,13 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             var member = members[i];
             string? name = null;
             string? type = null;
-            string? path = null;
+            (string Path, bool AllowNull)? arguments = null;
 
             if(member is MethodDeclarationSyntax methodSyntax)
             {
                 var methodName = methodSyntax.Identifier.ValueText;
 
-                if(methodName == OnReadyData.ReadyMethodName)
+                if(methodName == SourceData.ReadyMethodName)
                 {
                     hasReadyMethod = true;
                 }
@@ -107,40 +107,40 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             {
                 name = propSyntax.Identifier.ValueText;
                 type = propSyntax.Type.ToString();
-                path = GetOnReadyPath(propSyntax.AttributeLists);
+                arguments = GetAttributeArguments(propSyntax.AttributeLists);
             }
 
             if (member is FieldDeclarationSyntax fieldSyntax)
             {
                 name = fieldSyntax.Declaration.Variables.Select(x => x.Identifier.ValueText).First();
                 type = fieldSyntax.Declaration.Type.ToString();
-                path = GetOnReadyPath(fieldSyntax.AttributeLists);
+                arguments = GetAttributeArguments(fieldSyntax.AttributeLists);
             }
 
-            if(member is ConstructorDeclarationSyntax)
+            if (member is ConstructorDeclarationSyntax)
             {
                 hasConstructor = true;
             }
 
-            if (name is not null && type is not null && path is not null)
+            if (name is not null && type is not null && arguments.HasValue)
             {
-                properties.Add(new OnReadyAttributeData(name, type, path));
+                properties.Add(new OnReadyAttributeData(name, type, arguments.Value.Path, arguments.Value.AllowNull));
             }
         }
 
         var classInitMethodModifiers = "public void";
         if(hasReadyMethod && classInitMethodName == "")
         {
-            classInitMethodName = OnReadyData.DefaultInitMethodName;
+            classInitMethodName = SourceData.DefaultInitMethodName;
         }
 
         if(!hasReadyMethod && classInitMethodName == "")
         {
-            classInitMethodName = OnReadyData.ReadyMethodName;
+            classInitMethodName = SourceData.ReadyMethodName;
             classInitMethodModifiers = "public override void";
         }
 
-        return new OnReadyData(className, 
+        return new SourceData(className, 
             classModifiers, 
             classInitMethodName, 
             classInitMethodModifiers, 
@@ -153,24 +153,38 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             new EquatableArray<OnReadyAttributeData>(properties));
     }
 
-    private static string? GetOnReadyPath(SyntaxList<AttributeListSyntax> attributeList)
+    private static (string Path, bool AllowNull)? GetAttributeArguments(SyntaxList<AttributeListSyntax> attributeList)
     {
         var attributes = attributeList.SelectMany(x => x.Attributes);
         var onReadyAttribute = attributes.FirstOrDefault(x => x.Name is IdentifierNameSyntax identifier &&
             identifier.Identifier.ValueText == "OnReady");
+        string path = "";
+        bool allowNull = false;
 
         if (onReadyAttribute is not null)
         {
-            for (int j = 0; j < onReadyAttribute.ArgumentList?.Arguments.Count; j++)
+            for (int i = 0; i < onReadyAttribute.ArgumentList?.Arguments.Count; i++)
             {
-                var argument = onReadyAttribute.ArgumentList.Arguments[j];
+                var argument = onReadyAttribute.ArgumentList.Arguments[i];
                 var nameColon = argument.NameColon?.Name.Identifier.ValueText;
 
-                if ((j == 0 && nameColon is null) || nameColon == "path")
+                if ((i == 0 && nameColon is null) || nameColon == "path")
                 {
-                    return argument.Expression.ChildTokens().First().ValueText;
+                    path = argument.Expression.ChildTokens().First().ValueText;
+                }
+
+                if((i == 1 && nameColon is null) || nameColon == "allowNull")
+                {
+                    var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
+
+                    if (success)
+                    {
+                        allowNull = canBeNull;
+                    }
                 }
             }
+
+            return (path, allowNull);
         }
 
         return null;
@@ -213,7 +227,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         return nameSpace;
     }
 
-    private static void Execute(in OnReadyData onReadyData, in SourceProductionContext spc)
+    private static void Execute(in SourceData onReadyData, in SourceProductionContext spc)
     {
         var builder = new SourceBuilder();
         builder.AddLine("// <auto-generated />")
@@ -240,10 +254,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         spc.AddSource($"{onReadyData.ClassName}.g.cs", SourceText.From(code, Encoding.UTF8));
     }
 
-    private static void GenerateInitializerMethod(in OnReadyData onReadyData, in SourceBuilder builder)
+    private static void GenerateInitializerMethod(in SourceData onReadyData, in SourceBuilder builder)
     {
-        var initMethodName = onReadyData.MethodName == OnReadyData.ReadyMethodName && !onReadyData.CanGenerateReadyMethod() ?
-                OnReadyData.DefaultInitMethodName : onReadyData.MethodName;
+        var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.CanGenerateReadyMethod() ?
+                SourceData.DefaultInitMethodName : onReadyData.MethodName;
 
         if(onReadyData.CanGenerateReadyMethod())
         {
@@ -263,7 +277,8 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         foreach (var data in onReadyData.Attributes)
         {
-            builder.AddMethodContent($"{data.VariableName} = GetNode<{data.TypeName}>(\"{data.Path}\");");
+            var getNodeSyntax = data.AllowNull ? "GetNodeOrNull" : "GetNode";
+            builder.AddMethodContent($"{data.VariableName} = {getNodeSyntax}<{data.TypeName}>(\"{data.Path}\");");
         }
     }
 }

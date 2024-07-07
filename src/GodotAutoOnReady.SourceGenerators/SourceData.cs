@@ -2,7 +2,7 @@
 
 namespace GodotAutoOnReady.SourceGenerators;
 
-internal readonly record struct OnReadyData
+internal readonly record struct SourceData
 {
     internal const string DefaultInitMethodName = "OnReadyInit";
     internal const string ReadyMethodName = "_Ready";
@@ -19,7 +19,7 @@ internal readonly record struct OnReadyData
     internal readonly EquatableArray<string> UsingDeclarations;
     internal readonly EquatableArray<OnReadyAttributeData> Attributes;
 
-    internal OnReadyData(
+    internal SourceData(
         string className,
         string classModifiers,
         string methodName,
@@ -28,7 +28,7 @@ internal readonly record struct OnReadyData
         string baseClass,
         bool hasConstructor,
         bool nullableDisable,
-        string moduleName,
+        string assemblyName,
         EquatableArray<string> usingDeclarations,
         EquatableArray<OnReadyAttributeData> attributes)
     {
@@ -41,7 +41,7 @@ internal readonly record struct OnReadyData
         HasConstructor = hasConstructor;
         Attributes = attributes;
         NullableDisable = nullableDisable;
-        AssemblyName = moduleName;
+        AssemblyName = assemblyName;
         UsingDeclarations = usingDeclarations;
     }
 

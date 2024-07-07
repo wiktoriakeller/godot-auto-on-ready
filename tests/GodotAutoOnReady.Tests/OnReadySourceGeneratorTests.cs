@@ -177,4 +177,32 @@ public class OnReadySourceGeneratorTests
 
         await VerifyHelper.Verify(source);
     }
+
+    [Fact]
+    public async Task GeneratesReadyCorrectlyWhenOnReadyAttributeAllowsNull()
+    {
+        var source = """
+        using Godot;
+        using RPGGame.Components;
+        using RPGGame.Controllers;
+        using GodotAutoOnReady.SourceGenerators.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateReadyMethod]
+        public partial class Sword : Node
+        {
+            [OnReady("%SomeProp", true)]
+            public DummyNode Node { get; set; } = null!;
+
+            [OnReady("%SomeField")]
+            private DummyNode Field = null!;
+
+            [OnReady("%SomeField2", true)]
+            public DummyNode Field2 = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source);
+    }
 }
