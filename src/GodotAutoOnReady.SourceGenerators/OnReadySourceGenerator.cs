@@ -192,13 +192,13 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
     private static string GetNamespace(in BaseTypeDeclarationSyntax syntax)
     {
-        // If we don't have a namespace at all we'll return an empty string ("default namespace" case)
+        //Default namespace case
         string nameSpace = string.Empty;
 
-        // Get the containing syntax node for the type declaration (could be a nested type)
+        //Get the containing syntax node for the type declaration (could be a nested type)
         SyntaxNode? potentialNamespaceParent = syntax.Parent;
 
-        // Keep moving out of nested classes
+        //Keep moving out of nested classes
         while (potentialNamespaceParent != null &&
                 potentialNamespaceParent is not NamespaceDeclarationSyntax
                 && potentialNamespaceParent is not FileScopedNamespaceDeclarationSyntax)
@@ -206,12 +206,12 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             potentialNamespaceParent = potentialNamespaceParent.Parent;
         }
 
-        // Build up the final namespace by looping until we no longer have a namespace declaration
+        //Build up the final namespace by looping until we no longer have a namespace declaration
         if (potentialNamespaceParent is BaseNamespaceDeclarationSyntax namespaceParent)
         {
             nameSpace = namespaceParent.Name.ToString();
 
-            // Keep moving out of the namespace declarations until we run out of nested namespace declarations
+            //Keep moving out of the namespace declarations until we run out of nested namespace declarations
             while (true)
             {
                 if (namespaceParent.Parent is not NamespaceDeclarationSyntax parent)
