@@ -177,7 +177,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 path = argument.Expression.ChildTokens().First().ValueText;
             }
 
-            if ((i == 1 && nameColon is null) || nameColon == "OrNull")
+            if ((i == 1 && nameColon is null) || nameColon == "orNull")
             {
                 var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
 

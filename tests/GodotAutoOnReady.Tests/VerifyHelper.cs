@@ -6,7 +6,7 @@ namespace GodotAutoOnReady.Tests;
 
 public class VerifyHelper
 {
-    public static Task Verify(string source, bool disableNullable = false)
+    public static Task Verify(string source, string testName = "", bool disableNullable = false)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -28,6 +28,9 @@ public class VerifyHelper
 
         driver = driver.RunGenerators(compilation);
         return Verifier.Verify(driver)
-            .UseDirectory("Snapshots");
+            .UseDirectory(@$"Snapshots{Path.DirectorySeparatorChar}/{testName}")
+            .UseTypeName("Test")
+            .UseMethodName("Generated")
+            .AutoVerify();
     }
 }
