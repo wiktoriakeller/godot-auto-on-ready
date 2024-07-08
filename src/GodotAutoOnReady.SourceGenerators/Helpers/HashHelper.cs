@@ -1,14 +1,14 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace GodotAutoOnReady.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerators.Helpers;
 
-public static class SourceGeneratorHelper
+internal static class HashHelper
 {
-    public static string ComputeHash(string sourceData)
+    internal static string ComputeHash(string sourceData)
     {
         using var sha256 = SHA256.Create();
-        byte[] bytes = sha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(sourceData));
+        byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(sourceData));
 
         var sb = new StringBuilder();
         for (int i = 0; i < bytes.Length; i++)

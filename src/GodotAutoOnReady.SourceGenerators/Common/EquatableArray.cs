@@ -12,7 +12,7 @@ internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnu
         _array = array;
     }
 
-    public EquatableArray(List<T> list)
+    public EquatableArray(IList<T> list)
     {
         _array = [.. list];
     }

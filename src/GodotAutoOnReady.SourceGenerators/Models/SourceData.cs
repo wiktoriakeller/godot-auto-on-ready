@@ -1,11 +1,14 @@
 ﻿using GodotAutoOnReady.SourceGenerators.Common;
 
-namespace GodotAutoOnReady.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerators.Models;
 
 internal readonly record struct SourceData
 {
-    internal const string DefaultInitMethodName = "OnReadyInit";
     internal const string ReadyMethodName = "_Ready";
+    internal const string ReadyMethodModifiers = "public override void";
+
+    internal const string DefaultInitMethodName = "OnReadyInit";
+    internal const string InitMethodMofidiers = "public void";
 
     internal readonly string ClassName;
     internal readonly string ClassModifiers;
@@ -13,11 +16,11 @@ internal readonly record struct SourceData
     internal readonly string MethodModifiers;
     internal readonly string ClassNamespace;
     internal readonly string BaseClass;
-    internal readonly bool HasConstructor;
     internal readonly bool NullableDisable;
     internal readonly string AssemblyName;
+    internal readonly EquatableArray<string> OnReadyMethods;
     internal readonly EquatableArray<string> UsingDeclarations;
-    internal readonly EquatableArray<OnReadyAttributeData> Attributes;
+    internal readonly EquatableArray<OnReadyGetAttributeData> Props;
 
     internal SourceData(
         string className,
@@ -26,11 +29,11 @@ internal readonly record struct SourceData
         string methodModifiers,
         string classNamespace,
         string baseClass,
-        bool hasConstructor,
         bool nullableDisable,
         string assemblyName,
         EquatableArray<string> usingDeclarations,
-        EquatableArray<OnReadyAttributeData> attributes)
+        EquatableArray<string> onReadyMethods,
+        EquatableArray<OnReadyGetAttributeData> props)
     {
         ClassName = className;
         ClassModifiers = classModifiers;
@@ -38,12 +41,12 @@ internal readonly record struct SourceData
         MethodModifiers = methodModifiers;
         ClassNamespace = classNamespace;
         BaseClass = baseClass;
-        HasConstructor = hasConstructor;
-        Attributes = attributes;
+        Props = props;
         NullableDisable = nullableDisable;
         AssemblyName = assemblyName;
         UsingDeclarations = usingDeclarations;
+        OnReadyMethods = onReadyMethods;
     }
 
-    internal bool CanGenerateReadyMethod() => MethodName == ReadyMethodName && !HasConstructor;
+    public bool CanGenerateReadyMethod() => MethodName == ReadyMethodName;
 }

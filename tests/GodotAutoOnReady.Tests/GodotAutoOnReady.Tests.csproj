@@ -38,78 +38,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyInCustomInitMethod#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#Sword.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#OnReadyAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectly#GenerateReadyMethodAttribute.g.verified.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#Sword.g.received.cs" />
 	</ItemGroup>
 
@@ -118,7 +46,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#GenerateReadyMethodAttribute.g.received.cs" />
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWithoutNamespace#GenerateOnReadyAttribute.g.received.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -130,7 +58,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.received.cs" />
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenReadyDeclarationAlreadyExists#GenerateOnReadyAttribute.g.received.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -142,7 +70,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#GenerateReadyMethodAttribute.g.received.cs" />
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenNullableIsDisabled#GenerateOnReadyAttribute.g.received.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -154,7 +82,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#GenerateReadyMethodAttribute.g.received.cs" />
+	  <None Remove="Snapshots\OnReadySourceGeneratorTests.GeneratesReadyCorrectlyWhenConstructorDeclarationAlreadyExists#GenerateOnReadyAttribute.g.received.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Snapshots\" />
 	</ItemGroup>
 
 </Project>

@@ -11,13 +11,13 @@ public class OnReadySourceGeneratorTests
 
         namespace RPGGame;
 
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -34,13 +34,13 @@ public class OnReadySourceGeneratorTests
 
         namespace RPGGame;
 
-        [GenerateReadyMethod("Init")]
+        [GenerateReady("Init")]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -55,13 +55,13 @@ public class OnReadySourceGeneratorTests
         using Godot;
         using GodotAutoOnReady.SourceGenerators.Attributes;
 
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -78,13 +78,13 @@ public class OnReadySourceGeneratorTests
 
         namespace RPGGame;
 
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
 
             public override void _Ready()
@@ -106,23 +106,18 @@ public class OnReadySourceGeneratorTests
 
         namespace RPGGame;
 
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
 
             public Sword()
             {
 
-            }
-
-            public override void _Ready()
-            {
-                OnReadyInit(); //Generated method for nodes initialization
             }
         }
         """;
@@ -139,13 +134,13 @@ public class OnReadySourceGeneratorTests
         
         namespace RPGGame;
         
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
         
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -164,13 +159,13 @@ public class OnReadySourceGeneratorTests
         
         namespace RPGGame;
         
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp")]
+            [OnReadyGet("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
         
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -189,16 +184,16 @@ public class OnReadySourceGeneratorTests
         
         namespace RPGGame;
         
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady("%SomeProp", true)]
+            [OnReadyGet("%SomeProp", true)]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady("%SomeField")]
+            [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
 
-            [OnReady("%SomeField2", true)]
+            [OnReadyGet("%SomeField2", true)]
             public DummyNode Field2 = null!;
         }
         """;
@@ -215,16 +210,16 @@ public class OnReadySourceGeneratorTests
         
         namespace RPGGame;
         
-        [GenerateReadyMethod]
+        [GenerateReady]
         public partial class Sword : Node
         {
-            [OnReady(path: "%SomeProp", allowNull: true)]
+            [OnReadyGet(path: "%SomeProp", orNull: true)]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReady(allowNull: false, path: "%SomeProp2")]
+            [OnReadyGet(orNull: false, path: "%SomeProp2")]
             public DummyNode Node2 { get; set; } = null!;
 
-            [OnReady(path: "%SomeField")]
+            [OnReadyGet(path: "%SomeField")]
             private DummyNode Field = null!;
         }
         """;

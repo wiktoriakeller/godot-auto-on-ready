@@ -1,6 +1,8 @@
 ﻿using GodotAutoOnReady.SourceGenerators.Attributes;
 using GodotAutoOnReady.SourceGenerators.Builders;
 using GodotAutoOnReady.SourceGenerators.Common;
+using GodotAutoOnReady.SourceGenerators.Helpers;
+using GodotAutoOnReady.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,16 +17,19 @@ public class OnReadySourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyGetAttribute.Attribute, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "GenerateReadyMethodAttribute.g.cs", SourceText.From(SourceGenerateReadyMethodAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyGetAttribute.g.cs", SourceText.From(SourceOnReadyGetAttribute.Attribute, Encoding.UTF8)));
+
+        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
+            "GenerateOnReadyAttribute.g.cs", SourceText.From(SourceGenerateOnReadyAttribute.Attribute, Encoding.UTF8)));
 
         IncrementalValuesProvider<SourceData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
-            "GodotAutoOnReady.SourceGenerators.Attributes.GenerateReadyMethodAttribute",
+            "GodotAutoOnReady.SourceGenerators.Attributes.GenerateOnReadyAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
-            .Where(static m => m is not null && m.Value.Attributes.Count > 0)
+            .Where(static m => m is not null && m.Value.Props.Count > 0)
             .Select(static (m, _) => m!.Value);
 
         context.RegisterImplementationSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
@@ -51,49 +56,53 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         bool disableNullable = context.SemanticModel.Compilation.Options.NullableContextOptions != NullableContextOptions.Disable;
         var assemblyName = context.SemanticModel.Compilation.AssemblyName ?? classDeclaration.Identifier.Text;
         var root = context.SemanticModel.SyntaxTree.GetRoot();
-        var usingDeclarations = new List<string>();
+        var usingDeclarations = SourceGeneratorHelper.GetUsingDeclarations(root);
 
-        foreach(var rootChild in root.ChildNodes())
-        {
-            if(rootChild is UsingDirectiveSyntax usingSyntax)
-            {
-                usingDeclarations.Add($"using {usingSyntax.Name!.GetText()};");
-            }
-        }
+        string className = classDeclaration.Identifier.ValueText;
+        string classModifiers = string.Join(" ", classDeclaration.Modifiers);
+        string baseClass = classDeclaration.BaseList?.ToString().Replace(":", "").Trim() ?? "";
+        string classNamespace = SourceGeneratorHelper.GetNamespace(classDeclaration);
 
-        var classModifiers = string.Join(" ", classDeclaration.Modifiers);
-        var className = classDeclaration.Identifier.ValueText;
-        var baseClass = classDeclaration.BaseList?.ToString().Replace(":", "").Trim() ?? "";
-        var classNamespace = GetNamespace(classDeclaration);
-
-        string classInitMethodName = "";
+        string classInitMethodName = SourceData.ReadyMethodName;
+        string classInitMethodModifiers = SourceData.ReadyMethodModifiers;
 
         //Extract name for custom initializer method if it is defined
-        for(int i = 0; i < context.Attributes.Length; i++)
+        for (int i = 0; i < context.Attributes.Length; i++)
         {
             var attribute = context.Attributes[i];
 
-            if(attribute.AttributeClass?.Name == "GenerateReadyMethodAttribute" && attribute.ConstructorArguments.Length == 1)
+            if(attribute.AttributeClass?.Name == SourceGenerateOnReadyAttribute.AttributeName && 
+                attribute.ConstructorArguments.Length == 1)
             {
                 var name = attribute.ConstructorArguments.First().Value as string;
-                classInitMethodName = string.IsNullOrWhiteSpace(name) ? classInitMethodName : name!;
-                break;
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    classInitMethodName = name!;
+                    classInitMethodModifiers = SourceData.InitMethodMofidiers;
+                    break;
+                }
             }
         }
 
-        var properties = new List<OnReadyAttributeData>();
-        var members = classDeclaration.Members;
+        var properties = new List<OnReadyGetAttributeData>();
+        var onReadyMethods = new List<string>();
         bool hasReadyMethod = false;
         var hasConstructor = false;
 
-        for (int i = 0; i < members.Count; i++)
+        for (int i = 0; i < classDeclaration.Members.Count; i++)
         {
-            var member = members[i];
+            var member = classDeclaration.Members[i];
             string? name = null;
             string? type = null;
-            (string Path, bool AllowNull)? arguments = null;
+            (string Path, bool OrNull)? arguments = null;
 
-            if(member is MethodDeclarationSyntax methodSyntax)
+            if (member is ConstructorDeclarationSyntax)
+            {
+                hasConstructor = true;
+            }
+
+            if (member is MethodDeclarationSyntax methodSyntax)
             {
                 var methodName = methodSyntax.Identifier.ValueText;
 
@@ -101,130 +110,85 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 {
                     hasReadyMethod = true;
                 }
+
+                //Add Action type methods with OnReady attribute
+                if(SourceGeneratorHelper.TryGetAttribute(methodSyntax.AttributeLists, SourceOnReadyAttribute.AttributeName, out var methodAttribute) &&
+                    methodSyntax.ParameterList.Parameters.Count == 0 &&
+                    methodSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
+                {
+                    onReadyMethods.Add(methodName);
+                }
             }
 
-            if (member is PropertyDeclarationSyntax propSyntax)
+            if (member is PropertyDeclarationSyntax propSyntax &&
+                SourceGeneratorHelper.TryGetAttribute(propSyntax.AttributeLists, SourceOnReadyGetAttribute.AttributeName, out var propAttribute))
             {
                 name = propSyntax.Identifier.ValueText;
                 type = propSyntax.Type.ToString();
-                arguments = GetAttributeArguments(propSyntax.AttributeLists);
+                arguments = GetOnReadyArguments(propAttribute!);
             }
 
-            if (member is FieldDeclarationSyntax fieldSyntax)
+            if (member is FieldDeclarationSyntax fieldSyntax &&
+                SourceGeneratorHelper.TryGetAttribute(fieldSyntax.AttributeLists, SourceOnReadyGetAttribute.AttributeName, out var fieldAttribute))
             {
                 name = fieldSyntax.Declaration.Variables.Select(x => x.Identifier.ValueText).First();
                 type = fieldSyntax.Declaration.Type.ToString();
-                arguments = GetAttributeArguments(fieldSyntax.AttributeLists);
-            }
-
-            if (member is ConstructorDeclarationSyntax)
-            {
-                hasConstructor = true;
+                arguments = GetOnReadyArguments(fieldAttribute!);
             }
 
             if (name is not null && type is not null && arguments.HasValue)
             {
-                properties.Add(new OnReadyAttributeData(name, type, arguments.Value.Path, arguments.Value.AllowNull));
+                properties.Add(new OnReadyGetAttributeData(name, type, arguments.Value.Path, arguments.Value.OrNull));
             }
         }
 
-        var classInitMethodModifiers = "public void";
-        if(hasReadyMethod && classInitMethodName == "")
+        if((hasReadyMethod || hasConstructor) && classInitMethodName == SourceData.ReadyMethodName)
         {
             classInitMethodName = SourceData.DefaultInitMethodName;
+            classInitMethodModifiers = SourceData.InitMethodMofidiers;
         }
 
-        if(!hasReadyMethod && classInitMethodName == "")
-        {
-            classInitMethodName = SourceData.ReadyMethodName;
-            classInitMethodModifiers = "public override void";
-        }
-
-        return new SourceData(className, 
+        return new SourceData(
+            className, 
             classModifiers, 
             classInitMethodName, 
             classInitMethodModifiers, 
             classNamespace,
             baseClass,
-            hasConstructor,
             disableNullable,
             assemblyName,
-            new EquatableArray<string>(usingDeclarations),
-            new EquatableArray<OnReadyAttributeData>(properties));
+            usingDeclarations,
+            new EquatableArray<string>(onReadyMethods),
+            new EquatableArray<OnReadyGetAttributeData>(properties));
     }
 
-    private static (string Path, bool AllowNull)? GetAttributeArguments(SyntaxList<AttributeListSyntax> attributeList)
+    private static (string Path, bool OrNull)? GetOnReadyArguments(in AttributeSyntax onReadyAttribute)
     {
-        var attributes = attributeList.SelectMany(x => x.Attributes);
-        var onReadyAttribute = attributes.FirstOrDefault(x => x.Name is IdentifierNameSyntax identifier &&
-            identifier.Identifier.ValueText == "OnReady");
         string path = "";
-        bool allowNull = false;
+        bool orNull = false;
 
-        if (onReadyAttribute is not null)
+        for (int i = 0; i < onReadyAttribute.ArgumentList?.Arguments.Count; i++)
         {
-            for (int i = 0; i < onReadyAttribute.ArgumentList?.Arguments.Count; i++)
+            var argument = onReadyAttribute.ArgumentList.Arguments[i];
+            var nameColon = argument.NameColon?.Name.Identifier.ValueText;
+
+            if ((i == 0 && nameColon is null) || nameColon == "path")
             {
-                var argument = onReadyAttribute.ArgumentList.Arguments[i];
-                var nameColon = argument.NameColon?.Name.Identifier.ValueText;
-
-                if ((i == 0 && nameColon is null) || nameColon == "path")
-                {
-                    path = argument.Expression.ChildTokens().First().ValueText;
-                }
-
-                if((i == 1 && nameColon is null) || nameColon == "allowNull")
-                {
-                    var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
-
-                    if (success)
-                    {
-                        allowNull = canBeNull;
-                    }
-                }
+                path = argument.Expression.ChildTokens().First().ValueText;
             }
 
-            return (path, allowNull);
-        }
-
-        return null;
-    }
-
-    private static string GetNamespace(in BaseTypeDeclarationSyntax syntax)
-    {
-        //Default namespace case
-        string nameSpace = string.Empty;
-
-        //Get the containing syntax node for the type declaration (could be a nested type)
-        SyntaxNode? potentialNamespaceParent = syntax.Parent;
-
-        //Keep moving out of nested classes
-        while (potentialNamespaceParent != null &&
-                potentialNamespaceParent is not NamespaceDeclarationSyntax
-                && potentialNamespaceParent is not FileScopedNamespaceDeclarationSyntax)
-        {
-            potentialNamespaceParent = potentialNamespaceParent.Parent;
-        }
-
-        //Build up the final namespace by looping until we no longer have a namespace declaration
-        if (potentialNamespaceParent is BaseNamespaceDeclarationSyntax namespaceParent)
-        {
-            nameSpace = namespaceParent.Name.ToString();
-
-            //Keep moving out of the namespace declarations until we run out of nested namespace declarations
-            while (true)
+            if ((i == 1 && nameColon is null) || nameColon == "OrNull")
             {
-                if (namespaceParent.Parent is not NamespaceDeclarationSyntax parent)
-                {
-                    break;
-                }
+                var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
 
-                nameSpace = $"{namespaceParent.Name}.{nameSpace}";
-                namespaceParent = parent;
+                if (success)
+                {
+                    orNull = canBeNull;
+                }
             }
         }
 
-        return nameSpace;
+        return (path, orNull);
     }
 
     private static void Execute(in SourceData onReadyData, in SourceProductionContext spc)
@@ -261,7 +225,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         if(onReadyData.CanGenerateReadyMethod())
         {
-            string readySignalHandler = SourceGeneratorHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
+            string readySignalHandler = HashHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
 
             //Generate constructor with OnReady handler
             builder.AddMethod("private", onReadyData.ClassName)
@@ -275,10 +239,16 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         //Initialize found properties / fields
         builder.AddMethod(onReadyData.MethodModifiers, initMethodName);
 
-        foreach (var data in onReadyData.Attributes)
+        foreach (var data in onReadyData.Props)
         {
-            var getNodeSyntax = data.AllowNull ? "GetNodeOrNull" : "GetNode";
+            var getNodeSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
             builder.AddMethodContent($"{data.VariableName} = {getNodeSyntax}<{data.TypeName}>(\"{data.Path}\");");
+        }
+
+        //Add OnReady action methods invocations
+        foreach(var method in onReadyData.OnReadyMethods)
+        {
+            builder.AddMethodContent($"{method}();");
         }
     }
 }
