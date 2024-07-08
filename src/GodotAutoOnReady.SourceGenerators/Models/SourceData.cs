@@ -20,7 +20,7 @@ internal readonly record struct SourceData
     internal readonly string AssemblyName;
     internal readonly EquatableArray<string> OnReadyMethods;
     internal readonly EquatableArray<string> UsingDeclarations;
-    internal readonly EquatableArray<OnReadyGetAttributeData> Props;
+    internal readonly EquatableArray<OnReadyGetAttributeData> Members;
 
     internal SourceData(
         string className,
@@ -33,7 +33,7 @@ internal readonly record struct SourceData
         string assemblyName,
         EquatableArray<string> usingDeclarations,
         EquatableArray<string> onReadyMethods,
-        EquatableArray<OnReadyGetAttributeData> props)
+        EquatableArray<OnReadyGetAttributeData> members)
     {
         ClassName = className;
         ClassModifiers = classModifiers;
@@ -41,7 +41,7 @@ internal readonly record struct SourceData
         MethodModifiers = methodModifiers;
         ClassNamespace = classNamespace;
         BaseClass = baseClass;
-        Props = props;
+        Members = members;
         NullableDisable = nullableDisable;
         AssemblyName = assemblyName;
         UsingDeclarations = usingDeclarations;

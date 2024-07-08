@@ -3,15 +3,15 @@
 public class OnReadySourceGeneratorTests
 {
     [Fact]
-    public async Task GeneratesReadyCorrectly()
+    public async Task GivenOnReadyGetMembers_GeneratesReadyMethodThatSetsTheMarkedMembers()
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
 
         namespace RPGGame;
 
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -26,15 +26,42 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
+    public async Task GivenMembersWithAndWithoutOnReadyGet_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+
+        namespace RPGGame;
+
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [OnReadyGet("%SomeProp")]
+            public DummyNode Node { get; set; } = null!;
+
+            [OnReadyGet("%SomeField")]
+            private DummyNode Field = null!;
+
+            public DummyNode Node2 { get; set; } = null!;
+        
+            private DummyNode Field2 = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source);
+    }
+
+    [Fact]
     public async Task GeneratesReadyCorrectlyInCustomInitMethod()
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
 
         namespace RPGGame;
 
-        [GenerateReady("Init")]
+        [GenerateOnReady("Init")]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -53,9 +80,9 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
 
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -74,11 +101,11 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
 
         namespace RPGGame;
 
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -102,11 +129,11 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
 
         namespace RPGGame;
 
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -130,11 +157,11 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
         
         namespace RPGGame;
         
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -155,11 +182,11 @@ public class OnReadySourceGeneratorTests
         using Godot;
         using RPGGame.Components;
         using RPGGame.Controllers;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
         
         namespace RPGGame;
         
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp")]
@@ -180,11 +207,11 @@ public class OnReadySourceGeneratorTests
         using Godot;
         using RPGGame.Components;
         using RPGGame.Controllers;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
         
         namespace RPGGame;
         
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet("%SomeProp", true)]
@@ -206,11 +233,11 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using GodotAutoOnReady.SourceGenerators.Attributes;
+        using GodotAutoOnReady.Attributes;
         
         namespace RPGGame;
         
-        [GenerateReady]
+        [GenerateOnReady]
         public partial class Sword : Node
         {
             [OnReadyGet(path: "%SomeProp", orNull: true)]

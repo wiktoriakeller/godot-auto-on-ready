@@ -17,7 +17,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyGetAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyAttribute.Attribute, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
             "OnReadyGetAttribute.g.cs", SourceText.From(SourceOnReadyGetAttribute.Attribute, Encoding.UTF8)));
@@ -26,10 +26,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "GenerateOnReadyAttribute.g.cs", SourceText.From(SourceGenerateOnReadyAttribute.Attribute, Encoding.UTF8)));
 
         IncrementalValuesProvider<SourceData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
-            "GodotAutoOnReady.SourceGenerators.Attributes.GenerateOnReadyAttribute",
+            "GodotAutoOnReady.Attributes.GenerateOnReadyAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
-            .Where(static m => m is not null && m.Value.Props.Count > 0)
+            .Where(static m => m is not null && m.Value.Members.Count > 0)
             .Select(static (m, _) => m!.Value);
 
         context.RegisterImplementationSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
@@ -239,7 +239,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         //Initialize found properties / fields
         builder.AddMethod(onReadyData.MethodModifiers, initMethodName);
 
-        foreach (var data in onReadyData.Props)
+        foreach (var data in onReadyData.Members)
         {
             var getNodeSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
             builder.AddMethodContent($"{data.VariableName} = {getNodeSyntax}<{data.TypeName}>(\"{data.Path}\");");
