@@ -201,7 +201,7 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source);
+        await VerifyHelper.Verify(source, nameof(WhenAdditionalUsingsAreDeclared_GeneratesFileWithCopiedUsings));
     }
 
     [Fact]

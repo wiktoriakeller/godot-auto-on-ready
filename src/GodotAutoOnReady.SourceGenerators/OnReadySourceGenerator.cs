@@ -114,7 +114,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 //Add Action type methods with OnReady attribute
                 if(SourceGeneratorHelper.TryGetAttribute(methodSyntax.AttributeLists, SourceOnReadyAttribute.AttributeName, out var methodAttribute) &&
                     methodSyntax.ParameterList.Parameters.Count == 0 &&
-                    methodSyntax.ReturnType.IsKind(SyntaxKind.VoidKeyword))
+                    methodSyntax.ReturnType is PredefinedTypeSyntax predefined && predefined.Keyword.IsKind(SyntaxKind.VoidKeyword))
                 {
                     onReadyMethods.Add(methodName);
                 }
