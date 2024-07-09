@@ -48,5 +48,5 @@ internal readonly record struct SourceData
         OnReadyMethods = onReadyMethods;
     }
 
-    public bool CanGenerateReadyMethod() => MethodName == ReadyMethodName;
+    public bool GenerateReadyMethod() => MethodName == ReadyMethodName;
 }

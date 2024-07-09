@@ -23,6 +23,7 @@ namespace RPGGame
 
 		public override void _Ready()
 		{
+			base._Ready();
 			Node = GetNodeOrNull<DummyNode>("%SomeProp");
 			Field = GetNode<DummyNode>("%SomeField");
 			Field2 = GetNodeOrNull<DummyNode>("%SomeField2");

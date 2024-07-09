@@ -6,7 +6,7 @@ namespace GodotAutoOnReady.Tests;
 
 public class VerifyHelper
 {
-    public static Task Verify(string source, string testName = "", bool disableNullable = false)
+    public static Task Verify(string source, string testName, bool disableNullable = false)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 

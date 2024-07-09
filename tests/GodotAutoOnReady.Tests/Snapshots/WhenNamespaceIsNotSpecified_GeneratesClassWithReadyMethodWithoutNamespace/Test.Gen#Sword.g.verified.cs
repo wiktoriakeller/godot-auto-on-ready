@@ -19,6 +19,7 @@ public partial class Sword : Node
 
 	public override void _Ready()
 	{
+		base._Ready();
 		Node = GetNode<DummyNode>("%SomeProp");
 		Field = GetNode<DummyNode>("%SomeField");
 	}

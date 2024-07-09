@@ -88,7 +88,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         var properties = new List<OnReadyGetAttributeData>();
         var onReadyMethods = new List<string>();
         bool hasReadyMethod = false;
-        var hasConstructor = false;
+        bool hasConstructor = false;
 
         for (int i = 0; i < classDeclaration.Members.Count; i++)
         {
@@ -220,10 +220,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
     private static void GenerateInitializerMethod(in SourceData onReadyData, in SourceBuilder builder)
     {
-        var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.CanGenerateReadyMethod() ?
+        var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.GenerateReadyMethod() ?
                 SourceData.DefaultInitMethodName : onReadyData.MethodName;
 
-        if(onReadyData.CanGenerateReadyMethod())
+        if(onReadyData.GenerateReadyMethod())
         {
             string readySignalHandler = HashHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
 
@@ -238,6 +238,11 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         //Initialize found properties / fields
         builder.AddMethod(onReadyData.MethodModifiers, initMethodName);
+
+        if (onReadyData.GenerateReadyMethod())
+        {
+            builder.AddMethodContent("base._Ready();");
+        }
 
         foreach (var data in onReadyData.Members)
         {
