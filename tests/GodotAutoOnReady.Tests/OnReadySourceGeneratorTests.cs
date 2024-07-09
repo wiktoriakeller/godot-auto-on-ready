@@ -259,7 +259,7 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
-    public async Task GivenActionMethodsMarkedWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers()
+    public async Task GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers()
     {
         var source = """
         using Godot;
@@ -293,6 +293,6 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenActionMethodsMarkedWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers));
+        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers));
     }
 }
