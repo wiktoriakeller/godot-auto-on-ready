@@ -12,15 +12,27 @@ internal static class SourceOnReadyGetAttribute
 
     namespace GodotAutoOnReady.Attributes
     {
+        /// <summary>
+        /// Generates code to initialize this property or field in the _Ready method or custom init method
+        /// when _Ready can't be auto-generated.
+        /// </summary>
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
         internal class OnReadyGetAttribute : Attribute
         {
-            internal readonly string Path;
+            /// <summary>
+            /// Uses GetNodeOrNull<T> instead of GetNode<T> when assigning value to this member.
+            /// </summary>
             internal bool OrNull { get; init; } = false;
 
+            private readonly string _path;
+    
+            /// <param name="path">
+            /// Path to the node or resource. When the path starts with res:// prefix then GD.Load<T> is used 
+            /// instead of GetNode<T>.
+            /// </param>
             internal OnReadyGetAttribute(string path)
             {
-                Path = path;
+                _path = path;
             }
         }
     }

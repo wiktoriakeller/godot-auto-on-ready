@@ -5,6 +5,11 @@
 #endif
 using System;
 
+/// <summary>
+/// Methods that accept 0 arguments and return void can be marked with this attribute.
+/// They will be called in _Ready or custom init method in the order they were declared and 
+/// after each member marked with OnReadyGet has been assigned. 
+/// <summary>
 namespace GodotAutoOnReady.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
