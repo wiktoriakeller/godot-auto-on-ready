@@ -305,10 +305,10 @@ public class OnReadySourceGeneratorTests
         public partial class Sword : Node
         {
             [OnReadyGet("res://icon.svg")]
-            public Texture2D Text { get; set; } = null!;
+            public Texture2D TextProp { get; set; } = null!;
 
             [OnReadyGet("res://icon.svg")]
-            public Texture2D Text2 = null!;
+            public Texture2D TextField = null!;
         }
         """;
 
