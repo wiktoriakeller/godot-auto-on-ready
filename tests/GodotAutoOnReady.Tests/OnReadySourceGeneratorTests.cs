@@ -295,4 +295,29 @@ public class OnReadySourceGeneratorTests
 
         await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers));
     }
+
+    [Fact]
+    public async Task GivenPropertiesWithResPath_AssignsPropertiesInReadyUsingGDLoad()
+    {
+        var source = """
+        using Godot;
+        using RPGGame.Components;
+        using RPGGame.Controllers;
+        using GodotAutoOnReady.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [OnReadyGet("res://icon.svg")]
+            public Texture2D Text { get; set; } = null!;
+
+            [OnReadyGet("res://icon.svg")]
+            public Texture2D Text2 = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(GivenPropertiesWithResPath_AssignsPropertiesInReadyUsingGDLoad));
+    }
 }

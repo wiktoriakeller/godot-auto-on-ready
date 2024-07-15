@@ -32,7 +32,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             .Where(static m => m is not null && m.Value.Members.Count > 0)
             .Select(static (m, _) => m!.Value);
 
-        context.RegisterImplementationSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
+        context.RegisterSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
     }
 
     private static bool IsPartialClassSyntax(SyntaxNode node)
@@ -246,8 +246,15 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         foreach (var data in onReadyData.Members)
         {
-            var getNodeSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
-            builder.AddMethodContent($"{data.VariableName} = {getNodeSyntax}<{data.TypeName}>(\"{data.Path}\");");
+            var isResource = data.Path.StartsWith("res://");
+            var getSyntax = "GD.Load";
+
+            if (!isResource)
+            {
+                getSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
+            }
+
+            builder.AddMethodContent($"{data.VariableName} = {getSyntax}<{data.TypeName}>(\"{data.Path}\");");
         }
 
         //Add OnReady action methods invocations
