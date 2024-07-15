@@ -15,11 +15,11 @@ internal static class SourceGenerateOnReadyAttribute
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
         internal class GenerateOnReadyAttribute : Attribute
         {
-            internal readonly string InitMethodName;
+            internal readonly string Name;
 
-            internal GenerateOnReadyAttribute(string initMethodName = "")
+            internal GenerateOnReadyAttribute(string name)
             {
-                InitMethodName = initMethodName;
+                Name = name;
             }
         }
     }

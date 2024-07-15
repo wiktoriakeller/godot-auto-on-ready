@@ -69,10 +69,6 @@ public class OnReadySourceGeneratorTests
 
             [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
-
-            public DummyNode Node2 { get; set; } = null!;
-        
-            private DummyNode Field2 = null!;
         }
         """;
 
@@ -218,13 +214,13 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp", true)]
+            [OnReadyGet("%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
 
             [OnReadyGet("%SomeField")]
             private DummyNode Field = null!;
 
-            [OnReadyGet("%SomeField2", true)]
+            [OnReadyGet("%SomeField2", OrNull = true)]
             public DummyNode Field2 = null!;
         }
         """;
@@ -244,10 +240,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet(path: "%SomeProp", orNull: true)]
+            [OnReadyGet(path: "%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet(orNull: false, path: "%SomeProp2")]
+            [OnReadyGet(OrNull = true, path: "%SomeProp2")]
             public DummyNode Node2 { get; set; } = null!;
 
             [OnReadyGet(path: "%SomeField")]
@@ -270,12 +266,12 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet(path: "%SomeProp", orNull: true)]
+            [OnReadyGet(path: "%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
-
-            [OnReadyGet(orNull: false, path: "%SomeProp2")]
+        
+            [OnReadyGet(OrNull = false, path: "%SomeProp2")]
             public DummyNode Node2 { get; set; } = null!;
-
+        
             [OnReadyGet(path: "%SomeField")]
             private DummyNode Field = null!;
 
@@ -301,8 +297,6 @@ public class OnReadySourceGeneratorTests
     {
         var source = """
         using Godot;
-        using RPGGame.Components;
-        using RPGGame.Controllers;
         using GodotAutoOnReady.Attributes;
         
         namespace RPGGame;

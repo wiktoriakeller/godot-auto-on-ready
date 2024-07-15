@@ -36,4 +36,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerators\GodotAutoOnReady.SourceGenerators.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Snapshots\" />
+	</ItemGroup>
 </Project>

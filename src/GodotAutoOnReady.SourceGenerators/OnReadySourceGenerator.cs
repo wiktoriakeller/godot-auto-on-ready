@@ -172,12 +172,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             var argument = onReadyAttribute.ArgumentList.Arguments[i];
             var nameColon = argument.NameColon?.Name.Identifier.ValueText;
 
-            if ((i == 0 && nameColon is null) || nameColon == "path")
-            {
-                path = argument.Expression.ChildTokens().First().ValueText;
-            }
-
-            if ((i == 1 && nameColon is null) || nameColon == "orNull")
+            if (argument.NameEquals?.Name.Identifier.ValueText == "OrNull")
             {
                 var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
 
@@ -185,6 +180,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 {
                     orNull = canBeNull;
                 }
+            }
+            else if(i == 0 || nameColon == "path")
+            {
+                path = argument.Expression.ChildTokens().First().ValueText;
             }
         }
 

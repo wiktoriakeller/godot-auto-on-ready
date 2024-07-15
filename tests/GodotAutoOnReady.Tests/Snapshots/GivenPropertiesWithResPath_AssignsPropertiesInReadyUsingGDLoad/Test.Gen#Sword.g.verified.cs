@@ -3,8 +3,6 @@
 #nullable disable
 
 using Godot;
-using RPGGame.Components;
-using RPGGame.Controllers;
 using GodotAutoOnReady.Attributes;
 
 namespace RPGGame

@@ -16,12 +16,11 @@ internal static class SourceOnReadyGetAttribute
         internal class OnReadyGetAttribute : Attribute
         {
             internal readonly string Path;
-            internal readonly bool OrNull;
+            internal bool OrNull { get; init; } = false;
 
-            internal OnReadyGetAttribute(string path, bool orNull = false)
+            internal OnReadyGetAttribute(string path)
             {
                 Path = path;
-                OrNull = orNull;
             }
         }
     }
