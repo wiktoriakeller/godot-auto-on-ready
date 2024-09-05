@@ -20,7 +20,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyAttribute.Attribute, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyGetAttribute.g.cs", SourceText.From(SourceOnReadyGetAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyGetAttribute.g.cs", SourceText.From(SourceGetNodeAttribute.Attribute, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
             "GenerateOnReadyAttribute.g.cs", SourceText.From(SourceGenerateOnReadyAttribute.Attribute, Encoding.UTF8)));
@@ -29,22 +29,14 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "GodotAutoOnReady.Attributes.GenerateOnReadyAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
-            .Where(static m => m is not null && m.Value.Members.Count > 0)
+            .Where(static m => m is not null && m.Value.GetNodeMembers.Count > 0)
             .Select(static (m, _) => m!.Value);
 
         context.RegisterSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
     }
 
-    private static bool IsPartialClassSyntax(SyntaxNode node)
-    {
-        if (node is ClassDeclarationSyntax classDeclaration &&
-            classDeclaration.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword)))
-        {
-            return true;
-        }
-
-        return false;
-    }
+    private static bool IsPartialClassSyntax(SyntaxNode node) 
+        => node is ClassDeclarationSyntax classDeclaration && classDeclaration.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword));
 
     private static SourceData? GetOnReadyData(GeneratorAttributeSyntaxContext context)
     {
@@ -85,7 +77,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             }
         }
 
-        var properties = new List<OnReadyGetAttributeData>();
+        var properties = new List<GetNodeAttributeData>();
         var onReadyMethods = new List<string>();
         bool hasReadyMethod = false;
         bool hasConstructor = false;
@@ -121,7 +113,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             }
 
             if (member is PropertyDeclarationSyntax propSyntax &&
-                SourceGeneratorHelper.TryGetAttribute(propSyntax.AttributeLists, SourceOnReadyGetAttribute.AttributeName, out var propAttribute))
+                SourceGeneratorHelper.TryGetAttribute(propSyntax.AttributeLists, SourceGetNodeAttribute.AttributeName, out var propAttribute))
             {
                 name = propSyntax.Identifier.ValueText;
                 type = propSyntax.Type.ToString();
@@ -129,7 +121,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             }
 
             if (member is FieldDeclarationSyntax fieldSyntax &&
-                SourceGeneratorHelper.TryGetAttribute(fieldSyntax.AttributeLists, SourceOnReadyGetAttribute.AttributeName, out var fieldAttribute))
+                SourceGeneratorHelper.TryGetAttribute(fieldSyntax.AttributeLists, SourceGetNodeAttribute.AttributeName, out var fieldAttribute))
             {
                 name = fieldSyntax.Declaration.Variables.Select(x => x.Identifier.ValueText).First();
                 type = fieldSyntax.Declaration.Type.ToString();
@@ -138,7 +130,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
             if (name is not null && type is not null && arguments.HasValue)
             {
-                properties.Add(new OnReadyGetAttributeData(name, type, arguments.Value.Path, arguments.Value.OrNull));
+                properties.Add(new GetNodeAttributeData(name, type, arguments.Value.Path, arguments.Value.OrNull));
             }
         }
 
@@ -159,7 +151,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             assemblyName,
             usingDeclarations,
             new EquatableArray<string>(onReadyMethods),
-            new EquatableArray<OnReadyGetAttributeData>(properties));
+            new EquatableArray<GetNodeAttributeData>(properties));
     }
 
     private static (string Path, bool OrNull)? GetOnReadyArguments(in AttributeSyntax onReadyAttribute)
@@ -243,7 +235,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             builder.AddMethodContent("base._Ready();");
         }
 
-        foreach (var data in onReadyData.Members)
+        foreach (var data in onReadyData.GetNodeMembers)
         {
             var isResource = data.Path.StartsWith("res://");
             var getSyntax = "GD.Load";

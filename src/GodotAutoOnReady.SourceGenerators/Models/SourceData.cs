@@ -7,7 +7,7 @@ internal readonly record struct SourceData
     internal const string ReadyMethodName = "_Ready";
     internal const string ReadyMethodModifiers = "public override void";
 
-    internal const string DefaultInitMethodName = "OnReadyInit";
+    internal const string DefaultInitMethodName = "OnReadySetup";
     internal const string InitMethodMofidiers = "public void";
 
     internal readonly string ClassName;
@@ -18,9 +18,11 @@ internal readonly record struct SourceData
     internal readonly string BaseClass;
     internal readonly bool NullableDisable;
     internal readonly string AssemblyName;
+
     internal readonly EquatableArray<string> OnReadyMethods;
     internal readonly EquatableArray<string> UsingDeclarations;
-    internal readonly EquatableArray<OnReadyGetAttributeData> Members;
+    internal readonly EquatableArray<GetNodeAttributeData> GetNodeMembers;
+    internal readonly EquatableArray<GetResAttributeData> GetResMembers;
 
     internal SourceData(
         string className,
@@ -33,7 +35,8 @@ internal readonly record struct SourceData
         string assemblyName,
         EquatableArray<string> usingDeclarations,
         EquatableArray<string> onReadyMethods,
-        EquatableArray<OnReadyGetAttributeData> members)
+        EquatableArray<GetNodeAttributeData> getNodeMembers,
+        EquatableArray<GetResAttributeData> getResMembers)
     {
         ClassName = className;
         ClassModifiers = classModifiers;
@@ -41,11 +44,12 @@ internal readonly record struct SourceData
         MethodModifiers = methodModifiers;
         ClassNamespace = classNamespace;
         BaseClass = baseClass;
-        Members = members;
+        GetNodeMembers = getNodeMembers;
         NullableDisable = nullableDisable;
         AssemblyName = assemblyName;
         UsingDeclarations = usingDeclarations;
         OnReadyMethods = onReadyMethods;
+        GetResMembers = getResMembers;
     }
 
     public bool GenerateReadyMethod() => MethodName == ReadyMethodName;
