@@ -10,19 +10,19 @@ internal readonly record struct SourceData
     internal const string DefaultInitMethodName = "OnReadySetup";
     internal const string InitMethodMofidiers = "public void";
 
-    internal readonly string ClassName;
-    internal readonly string ClassModifiers;
-    internal readonly string MethodName;
-    internal readonly string MethodModifiers;
-    internal readonly string ClassNamespace;
-    internal readonly string BaseClass;
     internal readonly bool NullableDisable;
     internal readonly string AssemblyName;
 
-    internal readonly EquatableArray<string> OnReadyMethods;
+    internal readonly string ClassNamespace;
+    internal readonly string ClassName;
+    internal readonly string ClassModifiers;
+    internal readonly string BaseClass;
+
+    internal readonly string MethodName;
+    internal readonly string MethodModifiers;
+
     internal readonly EquatableArray<string> UsingDeclarations;
-    internal readonly EquatableArray<GetNodeAttributeData> GetNodeMembers;
-    internal readonly EquatableArray<GetResAttributeData> GetResMembers;
+    internal readonly EquatableArray<BaseAttributeData> Members;
 
     internal SourceData(
         string className,
@@ -33,10 +33,8 @@ internal readonly record struct SourceData
         string baseClass,
         bool nullableDisable,
         string assemblyName,
-        EquatableArray<string> usingDeclarations,
-        EquatableArray<string> onReadyMethods,
-        EquatableArray<GetNodeAttributeData> getNodeMembers,
-        EquatableArray<GetResAttributeData> getResMembers)
+        List<string> usingDeclarations,
+        List<BaseAttributeData> members)
     {
         ClassName = className;
         ClassModifiers = classModifiers;
@@ -44,12 +42,12 @@ internal readonly record struct SourceData
         MethodModifiers = methodModifiers;
         ClassNamespace = classNamespace;
         BaseClass = baseClass;
-        GetNodeMembers = getNodeMembers;
         NullableDisable = nullableDisable;
         AssemblyName = assemblyName;
-        UsingDeclarations = usingDeclarations;
-        OnReadyMethods = onReadyMethods;
-        GetResMembers = getResMembers;
+        UsingDeclarations = new EquatableArray<string>(usingDeclarations);
+        
+        members.Sort();
+        Members = new EquatableArray<BaseAttributeData>();
     }
 
     public bool GenerateReadyMethod() => MethodName == ReadyMethodName;

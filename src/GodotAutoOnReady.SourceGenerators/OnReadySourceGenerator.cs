@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Reflection;
 using System.Text;
 
 namespace GodotAutoOnReady.SourceGenerators;
@@ -17,19 +18,19 @@ public class OnReadySourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyAttribute.g.cs", SourceText.From(SourceOnReadyAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyAttribute.g.cs", SourceText.From(OnReadyAttribute.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyGetAttribute.g.cs", SourceText.From(SourceGetNodeAttribute.Attribute, Encoding.UTF8)));
+            "OnReadyGetAttribute.g.cs", SourceText.From(GetNodeAttribute.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "GenerateOnReadyAttribute.g.cs", SourceText.From(SourceGenerateOnReadyAttribute.Attribute, Encoding.UTF8)));
+            "GenerateOnReadyAttribute.g.cs", SourceText.From(GenerateOnReadyAttribute.Source, Encoding.UTF8)));
 
         IncrementalValuesProvider<SourceData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
             "GodotAutoOnReady.Attributes.GenerateOnReadyAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
-            .Where(static m => m is not null && m.Value.GetNodeMembers.Count > 0)
+            .Where(static m => m is not null && m.Value.Members.Count > 0)
             .Select(static (m, _) => m!.Value);
 
         context.RegisterSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
@@ -63,7 +64,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         {
             var attribute = context.Attributes[i];
 
-            if(attribute.AttributeClass?.Name == SourceGenerateOnReadyAttribute.AttributeName && 
+            if(attribute.AttributeClass?.Name == GenerateOnReadyAttribute.Name && 
                 attribute.ConstructorArguments.Length == 1)
             {
                 var name = attribute.ConstructorArguments.First().Value as string;
@@ -77,24 +78,21 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             }
         }
 
-        var properties = new List<GetNodeAttributeData>();
-        var onReadyMethods = new List<string>();
+        var members = new List<BaseAttributeData>();
+        var attributeDataFactory = new AttributeDataFactory();
+
         bool hasReadyMethod = false;
         bool hasConstructor = false;
 
         for (int i = 0; i < classDeclaration.Members.Count; i++)
         {
             var member = classDeclaration.Members[i];
-            string? name = null;
-            string? type = null;
-            (string Path, bool OrNull)? arguments = null;
 
             if (member is ConstructorDeclarationSyntax)
             {
                 hasConstructor = true;
             }
-
-            if (member is MethodDeclarationSyntax methodSyntax)
+            else if (member is MethodDeclarationSyntax methodSyntax)
             {
                 var methodName = methodSyntax.Identifier.ValueText;
 
@@ -102,35 +100,13 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 {
                     hasReadyMethod = true;
                 }
-
-                //Add Action type methods with OnReady attribute
-                if(SourceGeneratorHelper.TryGetAttribute(methodSyntax.AttributeLists, SourceOnReadyAttribute.AttributeName, out var methodAttribute) &&
-                    methodSyntax.ParameterList.Parameters.Count == 0 &&
-                    methodSyntax.ReturnType is PredefinedTypeSyntax predefined && predefined.Keyword.IsKind(SyntaxKind.VoidKeyword))
-                {
-                    onReadyMethods.Add(methodName);
-                }
             }
 
-            if (member is PropertyDeclarationSyntax propSyntax &&
-                SourceGeneratorHelper.TryGetAttribute(propSyntax.AttributeLists, SourceGetNodeAttribute.AttributeName, out var propAttribute))
-            {
-                name = propSyntax.Identifier.ValueText;
-                type = propSyntax.Type.ToString();
-                arguments = GetOnReadyArguments(propAttribute!);
-            }
+            var data = attributeDataFactory.GetAttributeData(member);
 
-            if (member is FieldDeclarationSyntax fieldSyntax &&
-                SourceGeneratorHelper.TryGetAttribute(fieldSyntax.AttributeLists, SourceGetNodeAttribute.AttributeName, out var fieldAttribute))
+            if(data is not null)
             {
-                name = fieldSyntax.Declaration.Variables.Select(x => x.Identifier.ValueText).First();
-                type = fieldSyntax.Declaration.Type.ToString();
-                arguments = GetOnReadyArguments(fieldAttribute!);
-            }
-
-            if (name is not null && type is not null && arguments.HasValue)
-            {
-                properties.Add(new GetNodeAttributeData(name, type, arguments.Value.Path, arguments.Value.OrNull));
+                members.Add(data);
             }
         }
 
@@ -150,36 +126,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             disableNullable,
             assemblyName,
             usingDeclarations,
-            new EquatableArray<string>(onReadyMethods),
-            new EquatableArray<GetNodeAttributeData>(properties));
-    }
-
-    private static (string Path, bool OrNull)? GetOnReadyArguments(in AttributeSyntax onReadyAttribute)
-    {
-        string path = "";
-        bool orNull = false;
-
-        for (int i = 0; i < onReadyAttribute.ArgumentList?.Arguments.Count; i++)
-        {
-            var argument = onReadyAttribute.ArgumentList.Arguments[i];
-            var nameColon = argument.NameColon?.Name.Identifier.ValueText;
-
-            if (argument.NameEquals?.Name.Identifier.ValueText == "OrNull")
-            {
-                var success = bool.TryParse(argument.Expression.ChildTokens().First().ValueText, out bool canBeNull);
-
-                if (success)
-                {
-                    orNull = canBeNull;
-                }
-            }
-            else if(i == 0 || nameColon == "path")
-            {
-                path = argument.Expression.ChildTokens().First().ValueText;
-            }
-        }
-
-        return (path, orNull);
+            members);
     }
 
     private static void Execute(in SourceData onReadyData, in SourceProductionContext spc)
@@ -245,7 +192,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
                 getSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
             }
 
-            builder.AddMethodContent($"{data.VariableName} = {getSyntax}<{data.TypeName}>(\"{data.Path}\");");
+            builder.AddMethodContent($"{data.VariableName} = {getSyntax}<{data.Type}>(\"{data.Path}\");");
         }
 
         //Add OnReady action methods invocations

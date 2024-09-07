@@ -6,13 +6,16 @@ namespace GodotAutoOnReady.SourceGenerators.Helpers;
 
 internal static class SourceGeneratorHelper
 {
-    internal static bool TryGetAttribute(in SyntaxList<AttributeListSyntax> attributeList, string attributeName, out AttributeSyntax? attribute)
+    internal static bool TryGetAttribute(
+        in SyntaxList<AttributeListSyntax> attributeList, out AttributeSyntax? attribute, params string[] attributeNames)
     {
         attribute = null;
 
         foreach (var attributeListSyntax in attributeList)
         {
-            attribute = attributeListSyntax.Attributes.FirstOrDefault(x => x.Name is IdentifierNameSyntax identifier && identifier.Identifier.Text == attributeName);
+            attribute = attributeListSyntax.Attributes.FirstOrDefault(x => x.Name is IdentifierNameSyntax identifier && 
+                attributeNames.Contains(identifier.Identifier.Text));
+
             if (attribute is not null)
             {
                 return true;
@@ -22,7 +25,7 @@ internal static class SourceGeneratorHelper
         return false;
     }
 
-    internal static EquatableArray<string> GetUsingDeclarations(in SyntaxNode root)
+    internal static List<string> GetUsingDeclarations(in SyntaxNode root)
     {
         var usingDeclarations = new List<string>();
 
@@ -34,7 +37,7 @@ internal static class SourceGeneratorHelper
             }
         }
 
-        return new EquatableArray<string>(usingDeclarations);
+        return usingDeclarations;
     }
 
     internal static string GetNamespace(in BaseTypeDeclarationSyntax syntax)
