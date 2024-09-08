@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
 
 namespace GodotAutoOnReady.SourceGenerators.Models;
 
@@ -8,50 +8,43 @@ internal record GetNodeAttributeData : BaseAttributeData
     internal string Path { get; private set; } = "";
     internal bool OrNull { get; private set; } = false;
 
-    protected override HashSet<string> ArgumentNames
-    {
-        get => [nameof(Path), nameof(OrNull)];
-    }
-
     internal GetNodeAttributeData(
         string name,
         string type,
-        AttributeSyntax attribute) : base(name)
+        AttributeData attribute) : base(name)
     {
         Type = type;
         Setup(attribute);
     }
 
     internal override int GetOrder() => 1;
-    
-    private void Setup(AttributeSyntax attribute)
+
+    internal override string GetSourceCode()
     {
-        var arguments = GetArgumentsFromAttribute(attribute);
-        var path = "";
-
-        foreach(var kvp in arguments)
+        var getSyntax = OrNull ? "GetNodeOrNull" : "GetNode";
+        return $"{Name} = {getSyntax}<{Type}>(\"{Path}\");";
+    }
+    
+    private void Setup(AttributeData attribute)
+    {
+        if(attribute.ConstructorArguments.Length == 1)
         {
-            if(kvp.Key == nameof(Path))
+            Path = attribute.ConstructorArguments[0].Value?.ToString() ?? string.Empty;    
+        }
+
+        foreach(var arg in attribute.NamedArguments)
+        {
+            if(arg.Key == nameof(Path))
             {
-                path = kvp.Value;
+                Path = arg.Value.ToString();
             }
 
-            if(kvp.Key == nameof(OrNull))
+            if(arg.Key == nameof(OrNull))
             {
-                OrNull = bool.Parse(kvp.Value);
+                OrNull = bool.Parse(arg.Value.Value?.ToString());
             }
         }
 
-        if (string.IsNullOrEmpty(path))
-        {
-            if (path[0] == '_')
-            {
-                path = path.Length == 1 ? string.Empty : path.Substring(1);
-            }
-
-            path = char.ToUpper(path[0]) + path.Length > 1 ? path.Substring(1) : string.Empty;
-        }
-
-        Path = path;
+        Path = string.IsNullOrEmpty(Path) ? Type : Path;
     }
 }

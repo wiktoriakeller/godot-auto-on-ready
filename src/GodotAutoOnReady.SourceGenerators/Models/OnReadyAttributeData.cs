@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
 
 namespace GodotAutoOnReady.SourceGenerators.Models;
 
@@ -6,27 +6,23 @@ internal record OnReadyAttributeData : BaseAttributeData
 {
     internal int Order { get; private set; } = 0;
 
-    protected override HashSet<string> ArgumentNames
-    {
-        get => [nameof(Order)];
-    }
-
-    public OnReadyAttributeData(string name, AttributeSyntax attribute) : base(name)
+    public OnReadyAttributeData(string name, AttributeData attribute) : base(name)
     {
         Setup(attribute);
     }
 
     internal override int GetOrder() => 3 + Order;
 
-    private void Setup(AttributeSyntax attribute)
-    {
-        var arguments = GetArgumentsFromAttribute(attribute);
+    internal override string GetSourceCode() => $"{Name}();";
 
-        foreach (var kvp in arguments)
+    private void Setup(AttributeData attribute)
+    {
+        foreach (var arg in attribute.NamedArguments)
         {
-            if (kvp.Key == nameof(Order))
+            if (arg.Key == nameof(Order))
             {
-                Order = Math.Max(int.Parse(kvp.Value), 0);
+                Order = int.Parse(arg.Value.Value?.ToString());
+                Order = Math.Max(Order, 0);
             }
         }
     }

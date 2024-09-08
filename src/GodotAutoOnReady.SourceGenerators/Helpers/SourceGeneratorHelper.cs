@@ -1,23 +1,21 @@
-﻿using GodotAutoOnReady.SourceGenerators.Common;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
 
 namespace GodotAutoOnReady.SourceGenerators.Helpers;
 
 internal static class SourceGeneratorHelper
 {
     internal static bool TryGetAttribute(
-        in SyntaxList<AttributeListSyntax> attributeList, out AttributeSyntax? attribute, params string[] attributeNames)
+        this ImmutableArray<AttributeData> attributeList, out AttributeData? attribute, params string[] attributeNames)
     {
         attribute = null;
 
-        foreach (var attributeListSyntax in attributeList)
+        foreach (var attributeData in attributeList)
         {
-            attribute = attributeListSyntax.Attributes.FirstOrDefault(x => x.Name is IdentifierNameSyntax identifier && 
-                attributeNames.Contains(identifier.Identifier.Text));
-
-            if (attribute is not null)
+            if (attributeNames.Contains(attributeData.AttributeClass?.MetadataName))
             {
+                attribute = attributeData;
                 return true;
             }
         }

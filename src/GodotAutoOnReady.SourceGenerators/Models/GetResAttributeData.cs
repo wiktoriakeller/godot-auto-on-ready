@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using Microsoft.CodeAnalysis;
 
 namespace GodotAutoOnReady.SourceGenerators.Models;
 
@@ -8,15 +7,10 @@ internal record GetResAttributeData : BaseAttributeData
     internal string Type { get; private set; }
     internal string Path { get; private set; } = "";
 
-    protected override HashSet<string> ArgumentNames
-    {
-        get => ["path"];
-    }
-
     internal GetResAttributeData(
         string name, 
-        string type, 
-        AttributeSyntax attribute) : base(name)
+        string type,
+        AttributeData attribute) : base(name)
     {
         Type = type;
         Setup(attribute);
@@ -24,16 +18,13 @@ internal record GetResAttributeData : BaseAttributeData
 
     internal override int GetOrder() => 2;
 
-    private void Setup(AttributeSyntax attribute)
-    {
-        var arguments = GetArgumentsFromAttribute(attribute);
+    internal override string GetSourceCode() => $"{Name} = GD.Load<{Type}>(\"{Path}\");";
 
-        foreach (var kvp in arguments)
+    private void Setup(AttributeData attribute)
+    {
+        if (attribute.ConstructorArguments.Length == 1)
         {
-            if (kvp.Key == "path")
-            {
-                Path = kvp.Value;
-            }
+            Path = attribute.ConstructorArguments[0].Value?.ToString() ?? string.Empty;
         }
     }
 }

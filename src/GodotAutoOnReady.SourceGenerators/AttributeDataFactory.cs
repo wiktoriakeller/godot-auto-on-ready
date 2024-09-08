@@ -2,54 +2,54 @@
 using GodotAutoOnReady.SourceGenerators.Helpers;
 using GodotAutoOnReady.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GodotAutoOnReady.SourceGenerators;
 
 internal class AttributeDataFactory
 {
-    internal BaseAttributeData? GetAttributeData(MemberDeclarationSyntax member)
+    internal BaseAttributeData? GetAttributeData(ISymbol? symbol)
     {
-        if (member is MethodDeclarationSyntax methodSyntax &&
-            methodSyntax.ParameterList.Parameters.Count == 0 &&
-            methodSyntax.ReturnType is PredefinedTypeSyntax predefined && predefined.Keyword.IsKind(SyntaxKind.VoidKeyword) &&
-            SourceGeneratorHelper.TryGetAttribute(methodSyntax.AttributeLists, out var methodAttribute, OnReadyAttribute.Name))
+        if(symbol is null)
         {
-            var methodName = methodSyntax.Identifier.ValueText;
-
-            if(methodName != SourceData.ReadyMethodName && methodAttribute is not null)
-            {
-                return new OnReadyAttributeData(methodName, methodAttribute);
-            }
+            return null;
         }
 
-        string name = "";
-        string type = "";
-        AttributeSyntax? attribute = null;
-
-        if (member is PropertyDeclarationSyntax propSyntax &&
-            SourceGeneratorHelper.TryGetAttribute(propSyntax.AttributeLists, out var propAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
+        if(symbol is IMethodSymbol methodSymbol &&
+            methodSymbol.ReturnsVoid &&
+            methodSymbol.Parameters.Length == 0 &&
+            methodSymbol.GetAttributes().TryGetAttribute(out var methodAttribute, OnReadyAttribute.Name))
         {
-            name = propSyntax.Identifier.ValueText;
-            type = propSyntax.Type.ToString();
-            attribute = propAttribute;
-        }
-        else if (member is FieldDeclarationSyntax fieldSyntax &&
-            SourceGeneratorHelper.TryGetAttribute(fieldSyntax.AttributeLists, out var fieldAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
-        {
-            name = fieldSyntax.Declaration.Variables.Select(x => x.Identifier.ValueText).First();
-            type = fieldSyntax.Declaration.Type.ToString();
-            attribute = fieldAttribute;
+            var name = methodSymbol.Name;
+            return new OnReadyAttributeData(name, methodAttribute!);
         }
 
-        var attributeName = (attribute?.Name as IdentifierNameSyntax)?.Identifier.ValueText;
-        if(attributeName == GetNodeAttribute.Name)
+        if(symbol is IPropertySymbol propertySymbol &&
+            propertySymbol.GetAttributes().TryGetAttribute(out var propAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
+        {
+            var name = propertySymbol.Name;
+            var type = propertySymbol.Type.Name;
+            return GetAttributeDataByName(propAttribute!, name, type);
+        }
+
+        if(symbol is IFieldSymbol fieldSymbol && 
+           fieldSymbol.GetAttributes().TryGetAttribute(out var fieldAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
+        {
+            var name = fieldSymbol.Name;
+            var type = fieldSymbol.Type.Name;
+            return GetAttributeDataByName(fieldAttribute!, name, type);
+        }
+
+        return null;
+    }
+
+    private BaseAttributeData? GetAttributeDataByName(AttributeData attribute, string name, string type)
+    {
+        if (attribute.AttributeClass?.MetadataName == GetNodeAttribute.Name)
         {
             return new GetNodeAttributeData(name, type, attribute!);
         }
 
-        if(attributeName == GetResAttribute.Name)
+        if (attribute.AttributeClass?.MetadataName == GetResAttribute.Name)
         {
             return new GetResAttributeData(name, type, attribute!);
         }

@@ -5,16 +5,22 @@
 #endif
 using System;
 
-/// <summary>
-/// Methods that accept 0 arguments and return void can be marked with this attribute.
-/// They will be called in _Ready or custom init method in the order they were declared and 
-/// after each member marked with OnReadyGet has been assigned. 
-/// <summary>
 namespace GodotAutoOnReady.Attributes
 {
+    /// <summary>
+    /// Methods that accept 0 arguments and return void can be marked with this attribute.
+    /// They will be called in _Ready or a custom setup method in the order they were declared (or according to the Order parameter) and 
+    /// after each member marked with GetNode or GetRes has been assigned. 
+    /// <summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class OnReadyAttribute : Attribute
+    public sealed class OnReadyAttribute : Attribute
     {
-
+        /// <summary>
+        /// Order in which function will be executed. Default value is 0.
+        /// </summary>
+        /// <remarks>
+        /// Values that are negative are clamped to 0.
+        /// </remarks> 
+        public int Order { get; set; } = 0;
     }
 }

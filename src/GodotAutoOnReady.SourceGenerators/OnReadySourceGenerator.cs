@@ -1,13 +1,11 @@
 ﻿using GodotAutoOnReady.SourceGenerators.Attributes;
 using GodotAutoOnReady.SourceGenerators.Builders;
-using GodotAutoOnReady.SourceGenerators.Common;
 using GodotAutoOnReady.SourceGenerators.Helpers;
 using GodotAutoOnReady.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Reflection;
 using System.Text;
 
 namespace GodotAutoOnReady.SourceGenerators;
@@ -30,7 +28,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "GodotAutoOnReady.Attributes.GenerateOnReadyAttribute",
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
-            .Where(static m => m is not null && m.Value.Members.Count > 0)
+            .Where(static m =>
+            {
+                return m is not null && m.Value.Members.Count > 0;
+            })
             .Select(static (m, _) => m!.Value);
 
         context.RegisterSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
@@ -51,10 +52,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         var root = context.SemanticModel.SyntaxTree.GetRoot();
         var usingDeclarations = SourceGeneratorHelper.GetUsingDeclarations(root);
 
+        string classNamespace = SourceGeneratorHelper.GetNamespace(classDeclaration);
         string className = classDeclaration.Identifier.ValueText;
         string classModifiers = string.Join(" ", classDeclaration.Modifiers);
         string baseClass = classDeclaration.BaseList?.ToString().Replace(":", "").Trim() ?? "";
-        string classNamespace = SourceGeneratorHelper.GetNamespace(classDeclaration);
 
         string classInitMethodName = SourceData.ReadyMethodName;
         string classInitMethodModifiers = SourceData.ReadyMethodModifiers;
@@ -64,10 +65,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         {
             var attribute = context.Attributes[i];
 
-            if(attribute.AttributeClass?.Name == GenerateOnReadyAttribute.Name && 
-                attribute.ConstructorArguments.Length == 1)
+            if (attribute.AttributeClass?.Name == GenerateOnReadyAttribute.Name &&
+                attribute.NamedArguments.Length == 1)
             {
-                var name = attribute.ConstructorArguments.First().Value as string;
+                var name = attribute.NamedArguments.First().Value.Value?.ToString();
 
                 if (!string.IsNullOrEmpty(name))
                 {
@@ -82,29 +83,24 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         var attributeDataFactory = new AttributeDataFactory();
 
         bool hasReadyMethod = false;
-        bool hasConstructor = false;
+        bool hasConstructor = classDeclaration.Members.Any(x => x is ConstructorDeclarationSyntax);
 
-        for (int i = 0; i < classDeclaration.Members.Count; i++)
+        var classSymbols = context.SemanticModel.GetDeclaredSymbol(classDeclaration)?.GetMembers() ?? [];
+
+        for (int i = 0; i < classSymbols.Length; i++)
         {
-            var member = classDeclaration.Members[i];
+            var symbol = classSymbols[i];
 
-            if (member is ConstructorDeclarationSyntax)
+            if (symbol is IMethodSymbol methodSymbol &&
+                methodSymbol.Name == SourceData.ReadyMethodName)
             {
-                hasConstructor = true;
-            }
-            else if (member is MethodDeclarationSyntax methodSyntax)
-            {
-                var methodName = methodSyntax.Identifier.ValueText;
-
-                if(methodName == SourceData.ReadyMethodName)
-                {
-                    hasReadyMethod = true;
-                }
+                hasReadyMethod = true;
+                continue;
             }
 
-            var data = attributeDataFactory.GetAttributeData(member);
+            var data = attributeDataFactory.GetAttributeData(symbol);
 
-            if(data is not null)
+            if (data is not null)
             {
                 members.Add(data);
             }
@@ -158,10 +154,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
     private static void GenerateInitializerMethod(in SourceData onReadyData, in SourceBuilder builder)
     {
-        var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.GenerateReadyMethod() ?
+        var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.GenerateReadyMethod ?
                 SourceData.DefaultInitMethodName : onReadyData.MethodName;
 
-        if(onReadyData.GenerateReadyMethod())
+        if(onReadyData.GenerateReadyMethod)
         {
             string readySignalHandler = HashHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
 
@@ -177,28 +173,14 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         //Initialize found properties / fields
         builder.AddMethod(onReadyData.MethodModifiers, initMethodName);
 
-        if (onReadyData.GenerateReadyMethod())
+        if (onReadyData.GenerateReadyMethod)
         {
             builder.AddMethodContent("base._Ready();");
         }
 
-        foreach (var data in onReadyData.GetNodeMembers)
+        foreach(var member in onReadyData.Members)
         {
-            var isResource = data.Path.StartsWith("res://");
-            var getSyntax = "GD.Load";
-
-            if (!isResource)
-            {
-                getSyntax = data.OrNull ? "GetNodeOrNull" : "GetNode";
-            }
-
-            builder.AddMethodContent($"{data.VariableName} = {getSyntax}<{data.Type}>(\"{data.Path}\");");
-        }
-
-        //Add OnReady action methods invocations
-        foreach(var method in onReadyData.OnReadyMethods)
-        {
-            builder.AddMethodContent($"{method}();");
+            builder.AddMethodContent(member.GetSourceCode());
         }
     }
 }

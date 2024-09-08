@@ -8,26 +8,25 @@ using System;
 namespace GodotAutoOnReady.Attributes
 {
     /// <summary>
-    /// Generates code to initialize this property or field in the _Ready method or custom init method
+    /// Initializes a property or a field in the _Ready method or a custom setup method
     /// when _Ready can't be auto-generated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    internal class OnReadyGetAttribute : Attribute
+    public sealed class GetNodeAttribute : Attribute
     {
+        /// <summary>
+        /// Path to the node, when the path is empty a property type (e.g. Node2D, Button) is used instead.
+        /// </summary>
+        public string Path { get; set; }
+
         /// <summary>
         /// Uses GetNodeOrNull<T> instead of GetNode<T> when assigning value to this member.
         /// </summary>
-        internal bool OrNull { get; init; } = false;
+        public bool OrNull { get; set; } = false;
 
-        private readonly string _path;
-
-        /// <param name="path">
-        /// Path to the node or resource. When the path starts with res:// prefix then GD.Load<T> is used 
-        /// instead of GetNode<T>.
-        /// </param>
-        internal OnReadyGetAttribute(string path)
+        public GetNodeAttribute(string path = "")
         {
-            _path = path;
+            Path = path;
         }
     }
 }

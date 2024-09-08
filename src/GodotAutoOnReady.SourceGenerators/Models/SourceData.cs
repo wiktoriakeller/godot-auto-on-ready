@@ -24,6 +24,8 @@ internal readonly record struct SourceData
     internal readonly EquatableArray<string> UsingDeclarations;
     internal readonly EquatableArray<BaseAttributeData> Members;
 
+    internal bool GenerateReadyMethod => MethodName == ReadyMethodName;
+
     internal SourceData(
         string className,
         string classModifiers,
@@ -47,8 +49,6 @@ internal readonly record struct SourceData
         UsingDeclarations = new EquatableArray<string>(usingDeclarations);
         
         members.Sort();
-        Members = new EquatableArray<BaseAttributeData>();
+        Members = new EquatableArray<BaseAttributeData>(members);
     }
-
-    public bool GenerateReadyMethod() => MethodName == ReadyMethodName;
 }

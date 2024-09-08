@@ -3,7 +3,7 @@
 public class OnReadySourceGeneratorTests
 {
     [Fact]
-    public async Task GivenOnReadyGetMembers_GeneratesReadyMethodThatSetsTheMarkedMembers()
+    public async Task GivenGetNodeMembers_GeneratesReadyMethodThatSetsTheMarkedMembers()
     {
         var source = """
         using Godot;
@@ -14,19 +14,19 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenOnReadyGetMembers_GeneratesReadyMethodThatSetsTheMarkedMembers));
+        await VerifyHelper.Verify(source, nameof(GivenGetNodeMembers_GeneratesReadyMethodThatSetsTheMarkedMembers));
     }
 
     [Fact]
-    public async Task GivenMembersWithAndWithoutOnReadyGet_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers()
+    public async Task GivenMembersWithAndWithoutGetNode_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers()
     {
         var source = """
         using Godot;
@@ -37,10 +37,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
             public DummyNode Node2 { get; set; } = null!;
@@ -49,11 +49,11 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenMembersWithAndWithoutOnReadyGet_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers));
+        await VerifyHelper.Verify(source, nameof(GivenMembersWithAndWithoutGetNode_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers));
     }
 
     [Fact]
-    public async Task GivenCustomInitMethodName_GeneratesMethodNamedInitThatSetsTheMarkedMembers()
+    public async Task GivenCustomSetupMethodName_GeneratesMethodNamedInitThatSetsTheMarkedMembers()
     {
         var source = """
         using Godot;
@@ -61,18 +61,18 @@ public class OnReadySourceGeneratorTests
 
         namespace RPGGame;
 
-        [GenerateOnReady("Init")]
+        [GenerateOnReady(SetupMethod = "Init")]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("/root/Title")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("/root/Titled")]
             private DummyNode Field = null!;
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenCustomInitMethodName_GeneratesMethodNamedInitThatSetsTheMarkedMembers));
+        await VerifyHelper.Verify(source, nameof(GivenCustomSetupMethodName_GeneratesMethodNamedInitThatSetsTheMarkedMembers));
     }
 
     [Fact]
@@ -85,10 +85,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -97,7 +97,7 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
-    public async Task WhenReadyDeclarationAlreadyExists_GeneratesInitMethodWithDefaultName()
+    public async Task WhenReadyDeclarationAlreadyExists_GeneratesSetupMethodWithDefaultName()
     {
         var source = """
         using Godot;
@@ -108,24 +108,24 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
             public override void _Ready()
             {
-                OnReadyInit(); //Generated method for nodes initialization
+                OnReadySetup(); //Generated method for nodes initialization
             }
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(WhenReadyDeclarationAlreadyExists_GeneratesInitMethodWithDefaultName));
+        await VerifyHelper.Verify(source, nameof(WhenReadyDeclarationAlreadyExists_GeneratesSetupMethodWithDefaultName));
     }
 
     [Fact]
-    public async Task WhenDefaultConstructorExists_GeneratesInitMethodWithDefaultName()
+    public async Task WhenDefaultConstructorExists_GeneratesSetupMethodWithDefaultName()
     {
         var source = """
         using Godot;
@@ -136,10 +136,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
             public Sword()
@@ -149,7 +149,7 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(WhenDefaultConstructorExists_GeneratesInitMethodWithDefaultName));
+        await VerifyHelper.Verify(source, nameof(WhenDefaultConstructorExists_GeneratesSetupMethodWithDefaultName));
     }
 
     [Fact]
@@ -164,10 +164,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
         
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -189,10 +189,10 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp")]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
         
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
         }
         """;
@@ -201,7 +201,7 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
-    public async Task WhenOnReadyGetMembersThatAllowNull_GeneratesReadyMethodThatSetsMembersWithGetOrNull()
+    public async Task WhenGetNodeAllowsNull_GeneratesReadyMethodThatSetsMembersWithGetNodeOrNull()
     {
         var source = """
         using Godot;
@@ -214,22 +214,22 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("%SomeProp", OrNull = true)]
+            [GetNode("%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
 
-            [OnReadyGet("%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
-            [OnReadyGet("%SomeField2", OrNull = true)]
+            [GetNode("%SomeField2", OrNull = false)]
             public DummyNode Field2 = null!;
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(WhenOnReadyGetMembersThatAllowNull_GeneratesReadyMethodThatSetsMembersWithGetOrNull));
+        await VerifyHelper.Verify(source, nameof(WhenGetNodeAllowsNull_GeneratesReadyMethodThatSetsMembersWithGetNodeOrNull));
     }
 
     [Fact]
-    public async Task WhenOnReadyGetMembersHaveNamedParameters_GeneratesReadyMethodThatSetsMarkedMembers()
+    public async Task GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingGetNodeMembers()
     {
         var source = """
         using Godot;
@@ -240,39 +240,13 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet(path: "%SomeProp", OrNull = true)]
-            public DummyNode Node { get; set; } = null!;
-
-            [OnReadyGet(OrNull = true, path: "%SomeProp2")]
-            public DummyNode Node2 { get; set; } = null!;
-
-            [OnReadyGet(path: "%SomeField")]
-            private DummyNode Field = null!;
-        }
-        """;
-
-        await VerifyHelper.Verify(source, nameof(WhenOnReadyGetMembersHaveNamedParameters_GeneratesReadyMethodThatSetsMarkedMembers));
-    }
-
-    [Fact]
-    public async Task GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers()
-    {
-        var source = """
-        using Godot;
-        using GodotAutoOnReady.Attributes;
-        
-        namespace RPGGame;
-        
-        [GenerateOnReady]
-        public partial class Sword : Node
-        {
-            [OnReadyGet(path: "%SomeProp", OrNull = true)]
+            [GetNode("%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
         
-            [OnReadyGet(OrNull = false, path: "%SomeProp2")]
+            [GetNode(OrNull = false)]
             public DummyNode Node2 { get; set; } = null!;
         
-            [OnReadyGet(path: "%SomeField")]
+            [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
             [OnReady]
@@ -289,11 +263,11 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingOnReadyGetMembers));
+        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingGetNodeMembers));
     }
 
     [Fact]
-    public async Task GivenPropertiesWithResPath_AssignsPropertiesInReadyUsingGDLoad()
+    public async Task GivenMethodsWithOnReadyAttributeWithOrderParam_ReadyMethodInvokesThemAccordingToTheOrder()
     {
         var source = """
         using Godot;
@@ -304,14 +278,58 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [OnReadyGet("res://icon.svg")]
+            [GetNode("%SomeProp", OrNull = true)]
+            public DummyNode Node { get; set; } = null!;
+        
+            [GetNode(OrNull = false)]
+            public DummyNode Node2 { get; set; } = null!;
+        
+            [GetNode("%SomeField")]
+            private DummyNode Field = null!;
+
+            [OnReady(Order = 2)]
+            private void InvokeInReady1()
+            {
+                
+            }
+
+            [OnReady]
+            private void InvokeInReady2()
+            {
+                
+            }
+
+            [OnReady(Order = 1)]
+            private void InvokeInReady3()
+            {
+                
+            }
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttributeWithOrderParam_ReadyMethodInvokesThemAccordingToTheOrder));
+    }
+
+    [Fact]
+    public async Task GivenMembersWithGetRes_AssignsPropertiesInReadyUsingGDLoad()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [GetRes("res://icon.svg")]
             public Texture2D TextProp { get; set; } = null!;
 
-            [OnReadyGet("res://icon.svg")]
+            [GetRes("res://icon.svg")]
             public Texture2D TextField = null!;
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenPropertiesWithResPath_AssignsPropertiesInReadyUsingGDLoad));
+        await VerifyHelper.Verify(source, nameof(GivenMembersWithGetRes_AssignsPropertiesInReadyUsingGDLoad));
     }
 }
