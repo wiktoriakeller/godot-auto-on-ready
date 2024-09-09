@@ -19,7 +19,10 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             "OnReadyAttribute.g.cs", SourceText.From(OnReadyAttribute.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyGetAttribute.g.cs", SourceText.From(GetNodeAttribute.Source, Encoding.UTF8)));
+            "GetNodeAttribute.g.cs", SourceText.From(GetNodeAttribute.Source, Encoding.UTF8)));
+
+        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
+            "GetResAttribute.g.cs", SourceText.From(GetResAttribute.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
             "GenerateOnReadyAttribute.g.cs", SourceText.From(GenerateOnReadyAttribute.Source, Encoding.UTF8)));
