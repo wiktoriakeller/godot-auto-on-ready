@@ -22,12 +22,12 @@ namespace RPGGame
 		public override void _Ready()
 		{
 			base._Ready();
-			Node = GetNodeOrNull<DummyNode>("%SomeProp");
-			Node2 = GetNode<DummyNode>("DummyNode");
+			Node = GetNode<DummyNode>("%SomeProp");
 			Field = GetNode<DummyNode>("%SomeField");
+			InvokeInReady0();
+			InvokeInReady1();
 			InvokeInReady2();
 			InvokeInReady3();
-			InvokeInReady1();
 		}
 	}
 }

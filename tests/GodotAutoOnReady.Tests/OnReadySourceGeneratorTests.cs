@@ -281,29 +281,32 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [GetNode("%SomeProp", OrNull = true)]
+            [GetNode("%SomeProp")]
             public DummyNode Node { get; set; } = null!;
-        
-            [GetNode(OrNull = false)]
-            public DummyNode Node2 { get; set; } = null!;
         
             [GetNode("%SomeField")]
             private DummyNode Field = null!;
 
             [OnReady(Order = 2)]
+            private void InvokeInReady2()
+            {
+                
+            }
+
+            [OnReady(Order = 3)]
+            private void InvokeInReady3()
+            {
+                
+            }
+
+            [OnReady(Order = 1)]
             private void InvokeInReady1()
             {
                 
             }
 
             [OnReady]
-            private void InvokeInReady2()
-            {
-                
-            }
-
-            [OnReady(Order = 1)]
-            private void InvokeInReady3()
+            private void InvokeInReady0()
             {
                 
             }
@@ -325,10 +328,13 @@ public class OnReadySourceGeneratorTests
         [GenerateOnReady]
         public partial class Sword : Node
         {
-            [GetRes("res://icon.svg")]
+            [GetRes("res://iconprop.svg")]
             public Texture2D TextProp { get; set; } = null!;
 
-            [GetRes("res://icon.svg")]
+            [GetRes(path: "res://iconprop2.svg")]
+            public Texture2D TextProp2 { get; set; } = null!;
+
+            [GetRes("res://iconfield.svg")]
             public Texture2D TextField = null!;
         }
         """;

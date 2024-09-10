@@ -22,8 +22,9 @@ namespace RPGGame
 		public override void _Ready()
 		{
 			base._Ready();
-			TextProp = GD.Load<Texture2D>("res://icon.svg");
-			TextField = GD.Load<Texture2D>("res://icon.svg");
+			TextProp = GD.Load<Texture2D>("res://iconprop.svg");
+			TextProp2 = GD.Load<Texture2D>("res://iconprop2.svg");
+			TextField = GD.Load<Texture2D>("res://iconfield.svg");
 		}
 	}
 }
