@@ -217,6 +217,9 @@ public class OnReadySourceGeneratorTests
             [GetNode("%SomeProp", OrNull = true)]
             public DummyNode Node { get; set; } = null!;
 
+            [GetNode(path: "%SomeProp2", OrNull = true)]
+            public DummyNode Node2 { get; set; } = null!;
+
             [GetNode("%SomeField")]
             private DummyNode Field = null!;
 

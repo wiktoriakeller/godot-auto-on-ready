@@ -25,6 +25,7 @@ namespace RPGGame
 		{
 			base._Ready();
 			Node = GetNodeOrNull<DummyNode>("%SomeProp");
+			Node2 = GetNodeOrNull<DummyNode>("%SomeProp2");
 			Field = GetNode<DummyNode>("%SomeField");
 			Field2 = GetNode<DummyNode>("%SomeField2");
 		}
