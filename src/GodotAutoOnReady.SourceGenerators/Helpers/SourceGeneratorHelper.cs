@@ -11,8 +11,9 @@ internal static class SourceGeneratorHelper
     {
         attribute = null;
 
-        foreach (var attributeData in attributeList)
+        for (int i = 0; i < attributeList.Length; i++)
         {
+            var attributeData = attributeList[i];
             if (attributeNames.Contains(attributeData.AttributeClass?.MetadataName))
             {
                 attribute = attributeData;

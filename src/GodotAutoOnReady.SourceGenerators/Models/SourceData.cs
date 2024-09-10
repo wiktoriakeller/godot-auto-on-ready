@@ -1,4 +1,5 @@
 ﻿using GodotAutoOnReady.SourceGenerators.Common;
+using Microsoft.CodeAnalysis;
 
 namespace GodotAutoOnReady.SourceGenerators.Models;
 
@@ -23,6 +24,7 @@ internal readonly record struct SourceData
 
     internal readonly EquatableArray<string> UsingDeclarations;
     internal readonly EquatableArray<BaseAttributeData> Members;
+    internal readonly EquatableArray<Diagnostic> Diagnostics;
 
     internal bool GenerateReadyMethod => MethodName == ReadyMethodName;
 
@@ -36,7 +38,8 @@ internal readonly record struct SourceData
         bool nullableDisable,
         string assemblyName,
         List<string> usingDeclarations,
-        List<BaseAttributeData> members)
+        List<BaseAttributeData> members,
+        List<Diagnostic> diagnostics)
     {
         ClassName = className;
         ClassModifiers = classModifiers;
@@ -50,5 +53,6 @@ internal readonly record struct SourceData
         
         members.Sort();
         Members = new EquatableArray<BaseAttributeData>(members);
+        Diagnostics = new EquatableArray<Diagnostic>(diagnostics);
     }
 }

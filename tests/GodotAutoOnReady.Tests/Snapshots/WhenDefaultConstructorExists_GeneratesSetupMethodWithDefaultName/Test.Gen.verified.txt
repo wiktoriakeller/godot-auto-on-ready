@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: GAR001,
+      Title: Default constructor or _Ready method is already declared,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (5,0)-(18,1),
+      MessageFormat:
+_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
+Fields setup was generated in OnReadySetup method.,
+      Message:
+_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
+Fields setup was generated in OnReadySetup method.,
+      Category: Design
+    }
+  ]
+}

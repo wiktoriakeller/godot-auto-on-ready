@@ -341,4 +341,39 @@ public class OnReadySourceGeneratorTests
 
         await VerifyHelper.Verify(source, nameof(GivenMembersWithGetRes_AssignsPropertiesInReadyUsingGDLoad));
     }
+
+    [Fact]
+    public async Task When_ReadyMethodIsMarkedWithOnReadyAttribute_GenerateDiagnosticWithWarning()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+        
+        namespace RPGGame;
+        
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [GetNode("%SomeProp")]
+            public DummyNode Node { get; set; } = null!;
+        
+            [GetNode("%SomeField")]
+            private DummyNode Field = null!;
+
+            [OnReady]
+            private void _Ready() //Don't invoke in setup
+            {
+                
+            }
+
+            [OnReady]
+            private void InvokeInReady1()
+            {
+                
+            }
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(When_ReadyMethodIsMarkedWithOnReadyAttribute_GenerateDiagnosticWithWarning));
+    }
 }
