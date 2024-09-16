@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace GodotAutoOnReady.Tests;
+namespace GodotAutoOnReady.Tests.Helpers;
 
 public class VerifyHelper
 {
@@ -18,7 +18,7 @@ public class VerifyHelper
         var nullableContextOptions = disableNullable ? NullableContextOptions.Disable : NullableContextOptions.Enable;
         CSharpCompilation compilation = CSharpCompilation.Create(
             assemblyName: "Tests",
-            syntaxTrees: [ syntaxTree ],
+            syntaxTrees: [syntaxTree],
             references: references,
             options: new CSharpCompilationOptions(nullableContextOptions: nullableContextOptions, outputKind: OutputKind.NetModule));
 
@@ -30,7 +30,6 @@ public class VerifyHelper
         return Verifier.Verify(driver)
             .UseDirectory(@$"Snapshots{Path.DirectorySeparatorChar}/{testName}")
             .UseTypeName("Test")
-            .UseMethodName("Gen")
-            .AutoVerify();
+            .UseMethodName("Gen");
     }
 }

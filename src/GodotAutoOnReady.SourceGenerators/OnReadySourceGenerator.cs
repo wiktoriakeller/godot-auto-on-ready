@@ -1,5 +1,7 @@
 ﻿using GodotAutoOnReady.SourceGenerators.Attributes;
 using GodotAutoOnReady.SourceGenerators.Builders;
+using GodotAutoOnReady.SourceGenerators.Common;
+using GodotAutoOnReady.SourceGenerators.Diagnostics;
 using GodotAutoOnReady.SourceGenerators.Helpers;
 using GodotAutoOnReady.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -32,7 +34,8 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             predicate: static (node, _) => IsPartialClassSyntax(node),
             transform: static (ctx, _) => GetOnReadyData(ctx))
             .Where(static m => m is not null && m.Value.Members.Count > 0)
-            .Select(static (m, _) => m!.Value);
+            .Select(static (m, _) => m!.Value)
+            .WithTrackingName(TrackingNames.DataExtrction);
 
         context.RegisterSourceOutput(dataToGenerate, static (spc, onReadyData) => Execute(in onReadyData, spc));
     }
@@ -99,9 +102,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
                 if(methodSymbol.GetAttributes().TryGetAttribute(out _, OnReadyAttribute.Name))
                 {
-                    diagnostics.Add(CreateDiagnostic(methodSymbol.Locations.First(), 
-                        2, 
-                        "_Ready method can't be marked with OnReady attribute"));
+                    diagnostics.Add(CreateDiagnostic(methodSymbol.Locations.First(), 2, ErrorMessages.ReadyMarkedWithOnReady));
                 }
 
                 continue;
@@ -119,13 +120,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         {
             classInitMethodName = SourceData.DefaultInitMethodName;
             classInitMethodModifiers = SourceData.InitMethodMofidiers;
-            diagnostics.Add(CreateDiagnostic(classDeclaration.GetLocation(), 
-                1, 
-                "Default constructor or _Ready method is already declared",
-                """
-                _Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
-                Fields setup was generated in OnReadySetup method.
-                """));
+            diagnostics.Add(CreateDiagnostic(classDeclaration.GetLocation(), 1, ErrorMessages.ReadyMethodNotGenerated));
         }
 
         return new SourceData(
@@ -209,14 +204,13 @@ public class OnReadySourceGenerator : IIncrementalGenerator
     private static Diagnostic CreateDiagnostic(
         Location location, 
         int id, 
-        string title, 
-        string message = "", 
+        DiagnosticMessage message,
         DiagnosticSeverity severity = DiagnosticSeverity.Warning)
     {
         var descriptor = new DiagnosticDescriptor(
             id: $"GAR00{id}",
-            title: title,
-            messageFormat: string.IsNullOrEmpty(message) ? title : message,
+            title: message.Title,
+            messageFormat: message.Message,
             category: "Design",
             defaultSeverity: severity,
             isEnabledByDefault: true);

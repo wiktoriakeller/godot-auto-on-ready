@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace GodotAutoOnReady.Tests;
+namespace GodotAutoOnReady.Tests.Helpers;
 
 public static class ModuleInitializer
 {

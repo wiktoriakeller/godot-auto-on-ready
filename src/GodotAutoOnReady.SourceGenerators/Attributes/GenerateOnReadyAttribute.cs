@@ -1,4 +1,7 @@
-﻿namespace GodotAutoOnReady.SourceGenerators.Attributes;
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("GodotAutoOnReady.Tests")]
+namespace GodotAutoOnReady.SourceGenerators.Attributes;
 
 internal static class GenerateOnReadyAttribute
 {
