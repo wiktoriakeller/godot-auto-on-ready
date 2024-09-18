@@ -1,6 +1,6 @@
 ﻿namespace GodotAutoOnReady.SourceGenerators.Builders;
 
-enum TokenType
+internal enum TokenType
 {
     Method,
     Class,

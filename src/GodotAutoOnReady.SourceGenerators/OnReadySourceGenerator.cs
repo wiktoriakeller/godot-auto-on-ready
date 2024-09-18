@@ -17,17 +17,17 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "OnReadyAttribute.g.cs", SourceText.From(OnReadyAttribute.Source, Encoding.UTF8)));
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
+            "OnReadyAttribute.g.cs", SourceText.From(OnReadyAttributeSource.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "GetNodeAttribute.g.cs", SourceText.From(GetNodeAttribute.Source, Encoding.UTF8)));
+            "GetNodeAttribute.g.cs", SourceText.From(GetNodeAttributeSource.Source, Encoding.UTF8)));
+
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
+            "GetResAttribute.g.cs", SourceText.From(GetResAttributeSource.Source, Encoding.UTF8)));
 
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "GetResAttribute.g.cs", SourceText.From(GetResAttribute.Source, Encoding.UTF8)));
-
-        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "GenerateOnReadyAttribute.g.cs", SourceText.From(GenerateOnReadyAttribute.Source, Encoding.UTF8)));
+            "GenerateOnReadyAttribute.g.cs", SourceText.From(GenerateOnReadyAttributeSource.Source, Encoding.UTF8)));
 
         IncrementalValuesProvider<SourceData> dataToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName(
             "GodotAutoOnReady.Attributes.GenerateOnReadyAttribute",
@@ -69,7 +69,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         {
             var attribute = context.Attributes[i];
 
-            if (attribute.AttributeClass?.Name == GenerateOnReadyAttribute.Name &&
+            if (attribute.AttributeClass?.Name == GenerateOnReadyAttributeSource.Name &&
                 attribute.NamedArguments.Length == 1)
             {
                 var name = attribute.NamedArguments.First().Value.Value?.ToString();
@@ -100,7 +100,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             {
                 hasReadyMethod = true;
 
-                if(methodSymbol.GetAttributes().TryGetAttribute(out _, OnReadyAttribute.Name))
+                if(methodSymbol.GetAttributes().TryGetAttribute(out _, Attributes.OnReadyAttributeSource.Name))
                 {
                     diagnostics.Add(CreateDiagnostic(methodSymbol.Locations.First(), 2, ErrorMessages.ReadyMarkedWithOnReady));
                 }

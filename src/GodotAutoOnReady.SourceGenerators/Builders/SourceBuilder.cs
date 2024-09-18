@@ -2,20 +2,20 @@
 
 namespace GodotAutoOnReady.SourceGenerators.Builders;
 
-public class SourceBuilder
+internal class SourceBuilder
 {
     private StringBuilder _sb = new();
     private Stack<BracketToken> _tokens = [];
     private int _maxIndentation = 0;
 
-    public void Reset()
+    internal void Reset()
     {
         _sb = new();
         _tokens = [];
         _maxIndentation = 0;
     }
 
-    public string BuildSource()
+    internal string BuildSource()
     {
         while (_tokens.Count > 0)
         {
@@ -27,7 +27,7 @@ public class SourceBuilder
         return _sb.ToString();
     }
 
-    public SourceBuilder AddNamespace(string namespaceName)
+    internal SourceBuilder AddNamespace(string namespaceName)
     {
         _sb.AddLine($"namespace {namespaceName}")
            .AddLine("{");
@@ -36,7 +36,7 @@ public class SourceBuilder
         return this;
     }
 
-    public SourceBuilder AddNullableDisable(bool nullableDisable)
+    internal SourceBuilder AddNullableDisable(bool nullableDisable)
     {
         if (nullableDisable)
         {
@@ -46,7 +46,7 @@ public class SourceBuilder
         return this;
     }
 
-    public SourceBuilder AddClass(string modifiers, string className, string baseClass = "")
+    internal SourceBuilder AddClass(string modifiers, string className, string baseClass = "")
     {
         _sb.Add($"{modifiers} class {className}", _maxIndentation)
            .Add(baseClass == "" ? "\n" : $" : {baseClass}\n")
@@ -56,7 +56,7 @@ public class SourceBuilder
         return this;
     }
 
-    public SourceBuilder AddMethod(string modifiers, string methodName)
+    internal SourceBuilder AddMethod(string modifiers, string methodName)
     {
         CheckShouldAddClosingBracket();
 
@@ -67,13 +67,13 @@ public class SourceBuilder
         return this;
     }
 
-    public SourceBuilder AddMethodContent(string content = "")
+    internal SourceBuilder AddMethodContent(string content = "")
     {
         _sb.AddLine(content, _maxIndentation + 1);
         return this;
     }
 
-    public SourceBuilder AddLine(string line = "")
+    internal SourceBuilder AddLine(string line = "")
     {
         _sb.AddLine(line, _maxIndentation);
         return this;

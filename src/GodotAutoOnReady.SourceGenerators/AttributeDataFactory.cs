@@ -17,14 +17,14 @@ internal class AttributeDataFactory
         if(symbol is IMethodSymbol methodSymbol &&
             methodSymbol.ReturnsVoid &&
             methodSymbol.Parameters.Length == 0 &&
-            methodSymbol.GetAttributes().TryGetAttribute(out var methodAttribute, OnReadyAttribute.Name))
+            methodSymbol.GetAttributes().TryGetAttribute(out var methodAttribute, Attributes.OnReadyAttributeSource.Name))
         {
             var name = methodSymbol.Name;
-            return new OnReadyAttributeData(name, methodAttribute!);
+            return new Models.OnReadyAttributeData(name, methodAttribute!);
         }
 
         if(symbol is IPropertySymbol propertySymbol &&
-            propertySymbol.GetAttributes().TryGetAttribute(out var propAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
+            propertySymbol.GetAttributes().TryGetAttribute(out var propAttribute, GetNodeAttributeSource.Name, Attributes.GetResAttributeSource.Name))
         {
             var name = propertySymbol.Name;
             var type = propertySymbol.Type.Name;
@@ -32,7 +32,7 @@ internal class AttributeDataFactory
         }
 
         if(symbol is IFieldSymbol fieldSymbol && 
-           fieldSymbol.GetAttributes().TryGetAttribute(out var fieldAttribute, GetNodeAttribute.Name, GetResAttribute.Name))
+           fieldSymbol.GetAttributes().TryGetAttribute(out var fieldAttribute, GetNodeAttributeSource.Name, Attributes.GetResAttributeSource.Name))
         {
             var name = fieldSymbol.Name;
             var type = fieldSymbol.Type.Name;
@@ -44,14 +44,14 @@ internal class AttributeDataFactory
 
     private BaseAttributeData? GetAttributeDataByName(AttributeData attribute, string name, string type)
     {
-        if (attribute.AttributeClass?.MetadataName == GetNodeAttribute.Name)
+        if (attribute.AttributeClass?.MetadataName == GetNodeAttributeSource.Name)
         {
             return new GetNodeAttributeData(name, type, attribute!);
         }
 
-        if (attribute.AttributeClass?.MetadataName == GetResAttribute.Name)
+        if (attribute.AttributeClass?.MetadataName == Attributes.GetResAttributeSource.Name)
         {
-            return new GetResAttributeData(name, type, attribute!);
+            return new Models.GetResAttributeData(name, type, attribute!);
         }
 
         return null;
