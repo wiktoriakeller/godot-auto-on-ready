@@ -30,6 +30,7 @@ public class VerifyHelper
         return Verifier.Verify(driver)
             .UseDirectory(@$"Snapshots{Path.DirectorySeparatorChar}/{testName}")
             .UseTypeName("Test")
-            .UseMethodName("Gen");
+            .UseMethodName("Gen")
+            .AutoVerify();
     }
 }

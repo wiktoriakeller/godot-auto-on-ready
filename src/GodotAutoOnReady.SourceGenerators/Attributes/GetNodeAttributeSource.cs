@@ -24,7 +24,7 @@ internal static class GetNodeAttributeSource
         public sealed class GetNodeAttribute : Attribute
         {
             /// <summary>
-            /// Path to the node, when the path is empty a property type (e.g. Node2D, Button) is used instead.
+            /// Path to the node, when the path is empty a property name is used instead.
             /// </summary>
             public string Path { get; set; }
 
