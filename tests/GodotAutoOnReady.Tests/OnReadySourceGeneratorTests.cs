@@ -33,6 +33,29 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
+    public async Task GivenGetNodeMembersWithEmptyPaths_GeneratesReadyMethodThatUsesPropsNamesAsPath()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+
+        namespace RPGGame;
+
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [GetNode]
+            public DummyNode Node { get; set; } = null!;
+
+            [GetNode]
+            private DummyNode Field = null!;
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(GivenGetNodeMembersWithEmptyPaths_GeneratesReadyMethodThatUsesPropsNamesAsPath));
+    }
+
+    [Fact]
     public async Task GivenMembersWithAndWithoutGetNode_GeneratesReadyMethodThatSetsOnlyTheMarkedMembers()
     {
         var source = """
