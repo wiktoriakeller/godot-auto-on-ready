@@ -239,7 +239,7 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
-    public async Task GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingGetNodeMembers()
+    public async Task GivenMethodsWithOnReadyAttribute_GeneratesReadyInvokingThemAfterSettingGetNodeMembers()
     {
         var source = """
         using Godot;
@@ -273,7 +273,7 @@ public class OnReadySourceGeneratorTests
         }
         """;
 
-        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyMethodThatInvokesThemAfterSettingGetNodeMembers));
+        await VerifyHelper.Verify(source, nameof(GivenMethodsWithOnReadyAttribute_GeneratesReadyInvokingThemAfterSettingGetNodeMembers));
     }
 
     [Fact]

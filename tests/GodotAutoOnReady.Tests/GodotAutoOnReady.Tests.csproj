@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -33,6 +32,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerator\GodotAutoOnReady.SourceGenerator.csproj" />
+	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerator\GodotAutoOnReady.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
 	</ItemGroup>
 </Project>
