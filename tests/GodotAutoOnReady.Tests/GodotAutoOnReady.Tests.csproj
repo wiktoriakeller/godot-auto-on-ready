@@ -33,6 +33,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerators\GodotAutoOnReady.SourceGenerators.csproj" />
+	  <ProjectReference Include="..\..\src\GodotAutoOnReady.SourceGenerator\GodotAutoOnReady.SourceGenerator.csproj" />
 	</ItemGroup>
 </Project>

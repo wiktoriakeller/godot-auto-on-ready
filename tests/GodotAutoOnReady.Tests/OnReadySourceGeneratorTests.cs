@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
-using GodotAutoOnReady.SourceGenerators;
-using GodotAutoOnReady.SourceGenerators.Attributes;
-using GodotAutoOnReady.SourceGenerators.Common;
+using GodotAutoOnReady.SourceGenerator;
+using GodotAutoOnReady.SourceGenerator.Attributes;
+using GodotAutoOnReady.SourceGenerator.Common;
 using GodotAutoOnReady.Tests.Helpers;
 
 namespace GodotAutoOnReady.Tests;

@@ -1,4 +1,4 @@
-﻿using GodotAutoOnReady.SourceGenerators;
+﻿using GodotAutoOnReady.SourceGenerator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
