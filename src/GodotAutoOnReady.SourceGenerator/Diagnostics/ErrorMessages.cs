@@ -1,4 +1,4 @@
-﻿namespace GodotAutoOnReady.SourceGenerators.Diagnostics;
+﻿namespace GodotAutoOnReady.SourceGenerator.Diagnostics;
 
 internal static class ErrorMessages
 {

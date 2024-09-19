@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace GodotAutoOnReady.SourceGenerators.Common;
+namespace GodotAutoOnReady.SourceGenerator.Common;
 
 internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnumerable<T>
     where T : IEquatable<T>

@@ -1,4 +1,4 @@
-﻿namespace GodotAutoOnReady.SourceGenerators.Models;
+﻿namespace GodotAutoOnReady.SourceGenerator.Models;
 
 internal abstract record BaseAttributeData : IComparable<BaseAttributeData>
 {

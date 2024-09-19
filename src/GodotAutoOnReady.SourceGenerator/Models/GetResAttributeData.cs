@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace GodotAutoOnReady.SourceGenerators.Models;
+namespace GodotAutoOnReady.SourceGenerator.Models;
 
 internal record GetResAttributeData : BaseAttributeData
 {

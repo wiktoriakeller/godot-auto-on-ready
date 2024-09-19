@@ -9,9 +9,10 @@
     <IsRoslynComponent>true</IsRoslynComponent>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>GodotAutoOnReady.SourceGenerators</Title>
-    <Version>0.10.0</Version>
+	<IncludeBuildOutput>true</IncludeBuildOutput>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>GodotAutoOnReady.SourceGenerator</Title>
+    <Version>0.13.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

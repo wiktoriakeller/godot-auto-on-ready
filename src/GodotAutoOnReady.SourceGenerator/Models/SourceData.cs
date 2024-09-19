@@ -1,7 +1,7 @@
-﻿using GodotAutoOnReady.SourceGenerators.Common;
+﻿using GodotAutoOnReady.SourceGenerator.Common;
 using Microsoft.CodeAnalysis;
 
-namespace GodotAutoOnReady.SourceGenerators.Models;
+namespace GodotAutoOnReady.SourceGenerator.Models;
 
 internal readonly record struct SourceData
 {

@@ -1,3 +1,3 @@
-﻿namespace GodotAutoOnReady.SourceGenerators.Diagnostics;
+﻿namespace GodotAutoOnReady.SourceGenerator.Diagnostics;
 
 internal record struct DiagnosticMessage(string Title, string Message);

@@ -1,9 +1,9 @@
-﻿using GodotAutoOnReady.SourceGenerators.Attributes;
-using GodotAutoOnReady.SourceGenerators.Helpers;
-using GodotAutoOnReady.SourceGenerators.Models;
+﻿using GodotAutoOnReady.SourceGenerator.Attributes;
+using GodotAutoOnReady.SourceGenerator.Helpers;
+using GodotAutoOnReady.SourceGenerator.Models;
 using Microsoft.CodeAnalysis;
 
-namespace GodotAutoOnReady.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerator;
 
 internal class AttributeDataFactory
 {

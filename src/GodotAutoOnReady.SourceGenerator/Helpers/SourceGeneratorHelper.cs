@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 
-namespace GodotAutoOnReady.SourceGenerators.Helpers;
+namespace GodotAutoOnReady.SourceGenerator.Helpers;
 
 internal static class SourceGeneratorHelper
 {

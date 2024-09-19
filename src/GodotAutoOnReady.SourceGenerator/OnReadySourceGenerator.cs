@@ -1,16 +1,16 @@
-﻿using GodotAutoOnReady.SourceGenerators.Attributes;
-using GodotAutoOnReady.SourceGenerators.Builders;
-using GodotAutoOnReady.SourceGenerators.Common;
-using GodotAutoOnReady.SourceGenerators.Diagnostics;
-using GodotAutoOnReady.SourceGenerators.Helpers;
-using GodotAutoOnReady.SourceGenerators.Models;
+﻿using GodotAutoOnReady.SourceGenerator.Attributes;
+using GodotAutoOnReady.SourceGenerator.Builders;
+using GodotAutoOnReady.SourceGenerator.Common;
+using GodotAutoOnReady.SourceGenerator.Diagnostics;
+using GodotAutoOnReady.SourceGenerator.Helpers;
+using GodotAutoOnReady.SourceGenerator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
-namespace GodotAutoOnReady.SourceGenerators;
+namespace GodotAutoOnReady.SourceGenerator;
 
 [Generator]
 public class OnReadySourceGenerator : IIncrementalGenerator

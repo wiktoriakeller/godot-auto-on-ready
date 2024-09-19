@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace GodotAutoOnReady.SourceGenerators.Helpers;
+namespace GodotAutoOnReady.SourceGenerator.Helpers;
 
 internal static class HashHelper
 {
