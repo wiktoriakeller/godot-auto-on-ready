@@ -17,9 +17,9 @@ namespace GodotAutoOnReady.Attributes
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class GenerateOnReadyAttribute : Attribute
     {
-        /// <summary>
+        /// <value>
         /// Name used to generate custom setup method that can be called in _Ready.
-        /// </summary>
+        /// </value>
         public string SetupMethod { get; set; }
     }
 }

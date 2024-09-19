@@ -49,9 +49,9 @@ internal class AttributeDataFactory
             return new GetNodeAttributeData(name, type, attribute!);
         }
 
-        if (attribute.AttributeClass?.MetadataName == Attributes.GetResAttributeSource.Name)
+        if (attribute.AttributeClass?.MetadataName == GetResAttributeSource.Name)
         {
-            return new Models.GetResAttributeData(name, type, attribute!);
+            return new GetResAttributeData(name, type, attribute!);
         }
 
         return null;

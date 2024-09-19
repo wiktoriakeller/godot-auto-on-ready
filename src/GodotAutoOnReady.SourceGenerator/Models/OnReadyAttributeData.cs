@@ -19,7 +19,7 @@ internal record OnReadyAttributeData : BaseAttributeData
     {
         foreach (var arg in attribute.NamedArguments)
         {
-            if (arg.Key == nameof(Order))
+            if (arg.Key.ToLower() == nameof(Order).ToLower())
             {
                 Order = int.Parse(arg.Value.Value?.ToString());
                 Order = Math.Max(Order, 0);

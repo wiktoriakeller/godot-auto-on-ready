@@ -14,12 +14,9 @@ namespace GodotAutoOnReady.Attributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class OnReadyAttribute : Attribute
     {
-        /// <summary>
-        /// Order in which function will be executed. Default value is 0.
-        /// </summary>
-        /// <remarks>
-        /// Values that are negative are clamped to 0.
-        /// </remarks> 
+        /// <value>
+        /// Order in which function will be executed. Default value is 0. Values that are negative are clamped to 0.
+        /// </value>
         public int Order { get; set; } = 0;
     }
 }

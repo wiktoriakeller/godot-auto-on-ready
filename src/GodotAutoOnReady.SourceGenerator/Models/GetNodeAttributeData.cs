@@ -34,17 +34,17 @@ internal record GetNodeAttributeData : BaseAttributeData
 
         foreach(var arg in attribute.NamedArguments)
         {
-            if(arg.Key == nameof(Path))
+            if(arg.Key.ToLower() == nameof(Path).ToLower())
             {
                 Path = arg.Value.ToString();
             }
 
-            if(arg.Key == nameof(OrNull))
+            if(arg.Key.ToLower() == nameof(OrNull).ToLower())
             {
                 OrNull = bool.Parse(arg.Value.Value?.ToString());
             }
         }
 
-        Path = string.IsNullOrEmpty(Path) ? Type : Path;
+        Path = string.IsNullOrEmpty(Path) ? Name : Path;
     }
 }

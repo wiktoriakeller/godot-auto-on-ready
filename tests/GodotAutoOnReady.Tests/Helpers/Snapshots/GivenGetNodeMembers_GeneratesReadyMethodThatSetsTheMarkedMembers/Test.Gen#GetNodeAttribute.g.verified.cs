@@ -13,19 +13,17 @@ namespace GodotAutoOnReady.Attributes
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class GetNodeAttribute : Attribute
     {
-        /// <summary>
-        /// Path to the node, when the path is empty a property name is used instead.
-        /// </summary>
-        public string Path { get; set; }
-
-        /// <summary>
-        /// Uses GetNodeOrNull<T> instead of GetNode<T> when assigning value to this member.
-        /// </summary>
+        /// <value>
+        /// Uses GetNodeOrNull instead of GetNode when assigning value to the property.
+        /// </value>
         public bool OrNull { get; set; } = false;
 
+        private string _path;
+
+        /// <param name="path">Path to the node, when the path is empty a property name is used instead.</param>
         public GetNodeAttribute(string path = "")
         {
-            Path = path;
+            _path = path;
         }
     }
 }
