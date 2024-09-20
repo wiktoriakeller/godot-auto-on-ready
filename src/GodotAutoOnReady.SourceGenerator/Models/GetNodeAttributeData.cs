@@ -45,6 +45,8 @@ internal record GetNodeAttributeData : BaseAttributeData
             }
         }
 
-        Path = string.IsNullOrEmpty(Path) ? Name : Path;
+        var name = Name[0] == '_' && Name.Length > 1 ? Name.Substring(1) : Name;
+        var upperCasedName = name.Length > 1 ? char.ToUpper(name[0]) + name.Substring(1) : name.ToUpper();
+        Path = string.IsNullOrEmpty(Path) ? upperCasedName : Path;
     }
 }

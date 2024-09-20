@@ -25,7 +25,22 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
+
+            [GetNode]
+            private DummyNode _field2 = null!:
+
+            [GetNode]
+            private DummyNode _mobTimer = null!:
+
+            [GetNode]
+            private DummyNode _c = null!:
+
+            [GetNode]
+            private DummyNode _ = null!:
+
+            [GetNode]
+            private DummyNode c = null!:
         }
         """;
 
@@ -48,7 +63,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
         }
         """;
 
@@ -71,11 +86,11 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
 
             public DummyNode Node2 { get; set; } = null!;
         
-            private DummyNode Field2 = null!;
+            public DummyNode Field2 = null!;
         }
         """;
 
@@ -98,7 +113,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("/root/Titled")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
         }
         """;
 
@@ -119,7 +134,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
         }
         """;
 
@@ -142,7 +157,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
 
             public override void _Ready()
             {
@@ -170,7 +185,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
 
             public Sword()
             {
@@ -198,7 +213,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
         
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
         }
         """;
 
@@ -223,7 +238,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node { get; set; } = null!;
         
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
         }
         """;
 
@@ -251,7 +266,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node2 { get; set; } = null!;
 
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
 
             [GetNode("%SomeField2", OrNull = false)]
             public DummyNode Field2 = null!;
@@ -280,7 +295,7 @@ public class OnReadySourceGeneratorTests
             public DummyNode Node2 { get; set; } = null!;
         
             [GetNode("%SomeField")]
-            private DummyNode Field = null!;
+            public DummyNode Field = null!;
 
             [OnReady]
             private void InvokeInReady1()
@@ -423,7 +438,7 @@ public class OnReadySourceGeneratorTests
                 public DummyNode Node { get; set; } = null!;
             
                 [GetNode("/root/Titled")]
-                private DummyNode Field = null!;
+                public DummyNode Field = null!;
             }
             """;
 

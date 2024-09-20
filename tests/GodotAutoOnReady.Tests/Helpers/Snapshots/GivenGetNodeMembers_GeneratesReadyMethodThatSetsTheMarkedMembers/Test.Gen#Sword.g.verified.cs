@@ -24,6 +24,11 @@ namespace RPGGame
 			base._Ready();
 			Node = GetNode<DummyNode>("%SomeProp");
 			Field = GetNode<DummyNode>("%SomeField");
+			_field2 = GetNode<DummyNode>("Field2");
+			_mobTimer = GetNode<DummyNode>("MobTimer");
+			_c = GetNode<DummyNode>("C");
+			_ = GetNode<DummyNode>("_");
+			c = GetNode<DummyNode>("C");
 		}
 	}
 }
