@@ -48,6 +48,52 @@ public class OnReadySourceGeneratorTests
     }
 
     [Fact]
+    public async Task GivenGetNodeMembersPointingToProps_MarkedMembersShouldPointToTheGivenProps()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+
+        namespace RPGGame;
+
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [GetNode("A/B:Position", NodeType = "DummyNode")]
+            public Vector3 Position { get; set; };
+        
+            [GetNode("A/B:Position:X", NodeType = "DummyNode")]
+            public float PositionX { get; set; };
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(GivenGetNodeMembersPointingToProps_MarkedMembersShouldPointToTheGivenProps));
+    }
+
+    [Fact]
+    public async Task GivenGetNodeMembersPointingToPropsWithoutNodeType_ShouldCreateDiagnosticsWithNoNodeTypeMsg()
+    {
+        var source = """
+        using Godot;
+        using GodotAutoOnReady.Attributes;
+
+        namespace RPGGame;
+
+        [GenerateOnReady]
+        public partial class Sword : Node
+        {
+            [GetNode("A/B:Position")]
+            public Vector3 Position { get; set; };
+        
+            [GetNode("A/B:Position:X")]
+            public float PositionX { get; set; };
+        }
+        """;
+
+        await VerifyHelper.Verify(source, nameof(GivenGetNodeMembersPointingToPropsWithoutNodeType_ShouldCreateDiagnosticsWithNoNodeTypeMsg));
+    }
+
+    [Fact]
     public async Task GivenGetNodeMembersWithEmptyPaths_GeneratesReadyMethodThatUsesPropsNamesAsPath()
     {
         var source = """

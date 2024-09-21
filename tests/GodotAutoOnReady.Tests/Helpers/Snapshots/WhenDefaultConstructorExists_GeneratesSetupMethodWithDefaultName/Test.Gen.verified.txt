@@ -1,18 +1,53 @@
 ﻿{
   Diagnostics: [
     {
-      Id: GAR001,
-      Title: Default constructor or _Ready method is already declared,
-      Severity: Warning,
-      WarningLevel: 1,
-      Location: : (5,0)-(18,1),
-      MessageFormat:
-_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
-Fields setup was generated in OnReadySetup method.,
+      Location: /*
+
+[GenerateOnReady]
+^^^^^^^^^^^^^^^^^
+public partial class Sword : Node
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+{
+^
+    [GetNode("%SomeProp")]
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public DummyNode Node { get; set; } = null!;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    [GetNode("%SomeField")]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public DummyNode Field = null!;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    public Sword()
+^^^^^^^^^^^^^^^^^^
+    {
+^^^^^
+
+
+    }
+^^^^^
+}
+^
+*/
+ : (5,0)-(18,1),
       Message:
 _Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
 Fields setup was generated in OnReadySetup method.,
-      Category: Design
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: GAOR002,
+        Title: Default constructor or _Ready method is already declared,
+        MessageFormat:
+_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
+Fields setup was generated in OnReadySetup method.,
+        Category: Design,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }

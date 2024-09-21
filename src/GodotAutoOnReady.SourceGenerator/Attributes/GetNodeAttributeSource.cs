@@ -23,9 +23,15 @@ internal static class GetNodeAttributeSource
         public sealed class GetNodeAttribute : Attribute
         {
             /// <value>
-            /// Uses GetNodeOrNull instead of GetNode when assigning value to the property.
+            /// Uses <c>GetNodeOrNull</c> instead of <c>GetNode</c> when assigning value to the property.
             /// </value>
             public bool OrNull { get; set; } = false;
+
+            /// <value>
+            /// Provides type name for <c>GetNodeOrNull</c>. Used only when Path contains colon characters that point to a node property
+            /// e.g Player:Position:X and the field type is not the Node type.
+            /// </value>
+            public string NodeType { get; set; } = "";
 
             private string _path;
 

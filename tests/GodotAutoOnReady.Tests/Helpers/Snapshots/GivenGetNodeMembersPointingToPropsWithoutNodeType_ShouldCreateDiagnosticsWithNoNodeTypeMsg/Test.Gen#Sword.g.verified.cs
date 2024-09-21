@@ -22,11 +22,8 @@ namespace RPGGame
 		public override void _Ready()
 		{
 			base._Ready();
-			Node = GetNodeOrNull<DummyNode>("%SomeProp");
-			Node2 = GetNode<DummyNode>("DummyNode");
-			Field = GetNode<DummyNode>("%SomeField");
-			InvokeInReady1();
-			InvokeInReady2();
+			Position = GetNode<Vector3>("A/B").Position;
+			PositionX = GetNode<Single>("A/B").Position.X;
 		}
 	}
 }

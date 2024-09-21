@@ -100,9 +100,9 @@ public class OnReadySourceGenerator : IIncrementalGenerator
             {
                 hasReadyMethod = true;
 
-                if(methodSymbol.GetAttributes().TryGetAttribute(out _, Attributes.OnReadyAttributeSource.Name))
+                if(methodSymbol.GetAttributes().TryGetAttribute(out _, OnReadyAttributeSource.Name))
                 {
-                    diagnostics.Add(CreateDiagnostic(methodSymbol.Locations.First(), 2, ErrorMessages.ReadyMarkedWithOnReady));
+                    diagnostics.Add(DiagnosticsHelper.CreateDiagnostic(methodSymbol.Locations.First(), DiagnosticsHelper.ReadyMarkedWithOnReady));
                 }
 
                 continue;
@@ -120,7 +120,7 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         {
             classInitMethodName = SourceData.DefaultInitMethodName;
             classInitMethodModifiers = SourceData.InitMethodMofidiers;
-            diagnostics.Add(CreateDiagnostic(classDeclaration.GetLocation(), 1, ErrorMessages.ReadyMethodNotGenerated));
+            diagnostics.Add(DiagnosticsHelper.CreateDiagnostic(classDeclaration.GetLocation(), DiagnosticsHelper.ReadyMethodNotGenerated));
         }
 
         return new SourceData(
@@ -162,14 +162,14 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         builder.AddClass(onReadyData.ClassModifiers, onReadyData.ClassName, onReadyData.BaseClass);
 
-        GenerateInitializerMethod(onReadyData, builder);
+        GenerateInitializerMethod(onReadyData, builder, spc);
 
         var code = builder.BuildSource();
         
         spc.AddSource($"{onReadyData.ClassName}.g.cs", SourceText.From(code, Encoding.UTF8));
     }
 
-    private static void GenerateInitializerMethod(in SourceData onReadyData, in SourceBuilder builder)
+    private static void GenerateInitializerMethod(in SourceData onReadyData, in SourceBuilder builder, in SourceProductionContext spc)
     {
         var initMethodName = onReadyData.MethodName == SourceData.ReadyMethodName && !onReadyData.GenerateReadyMethod ?
                 SourceData.DefaultInitMethodName : onReadyData.MethodName;
@@ -198,23 +198,11 @@ public class OnReadySourceGenerator : IIncrementalGenerator
         foreach(var member in onReadyData.Members)
         {
             builder.AddMethodContent(member.GetSourceCode());
+
+            foreach (var diagnostic in member.Diagnostics)
+            {
+                spc.ReportDiagnostic(diagnostic);
+            }
         }
-    }
-
-    private static Diagnostic CreateDiagnostic(
-        Location location, 
-        int id, 
-        DiagnosticMessage message,
-        DiagnosticSeverity severity = DiagnosticSeverity.Warning)
-    {
-        var descriptor = new DiagnosticDescriptor(
-            id: $"GAR00{id}",
-            title: message.Title,
-            messageFormat: message.Message,
-            category: "Design",
-            defaultSeverity: severity,
-            isEnabledByDefault: true);
-
-        return Diagnostic.Create(descriptor, location);
     }
 }

@@ -10,7 +10,7 @@
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>GodotAutoOnReady.SourceGenerator</Title>
-        <Version>0.15.20</Version>
+        <Version>0.15.21</Version>
 		<Description>A source generator for automatic initialization of nodes in Godot using attributes</Description>
     </PropertyGroup>
 

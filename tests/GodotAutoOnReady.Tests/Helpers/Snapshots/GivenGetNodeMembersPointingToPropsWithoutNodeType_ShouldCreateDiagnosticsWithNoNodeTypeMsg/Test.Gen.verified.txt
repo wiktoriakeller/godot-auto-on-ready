@@ -1,0 +1,44 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+    [GetNode("A/B:Position")]
+    public Vector3 Position { get; set; };
+                   ^^^^^^^^
+
+*/
+ : (9,19)-(9,27),
+      Message: Path points to a property but no NodeType was provided.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: GAOR003,
+        Title: NodeType was not provided,
+        MessageFormat: Path points to a property but no NodeType was provided.,
+        Category: Design,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+    [GetNode("A/B:Position:X")]
+    public float PositionX { get; set; };
+                 ^^^^^^^^^
+}
+*/
+ : (12,17)-(12,26),
+      Message: Path points to a property but no NodeType was provided.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: GAOR003,
+        Title: NodeType was not provided,
+        MessageFormat: Path points to a property but no NodeType was provided.,
+        Category: Design,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -14,13 +14,14 @@ internal class AttributeDataFactory
             return null;
         }
 
+        var location = symbol.Locations.FirstOrDefault();
         if(symbol is IMethodSymbol methodSymbol &&
             methodSymbol.ReturnsVoid &&
             methodSymbol.Parameters.Length == 0 &&
             methodSymbol.GetAttributes().TryGetAttribute(out var methodAttribute, Attributes.OnReadyAttributeSource.Name))
         {
             var name = methodSymbol.Name;
-            return new Models.OnReadyAttributeData(name, methodAttribute!);
+            return new OnReadyAttributeData(name, methodAttribute!);
         }
 
         if(symbol is IPropertySymbol propertySymbol &&
@@ -28,7 +29,7 @@ internal class AttributeDataFactory
         {
             var name = propertySymbol.Name;
             var type = propertySymbol.Type.Name;
-            return GetAttributeDataByName(propAttribute!, name, type);
+            return GetAttributeDataByName(propAttribute!, name, type, location);
         }
 
         if(symbol is IFieldSymbol fieldSymbol && 
@@ -36,17 +37,17 @@ internal class AttributeDataFactory
         {
             var name = fieldSymbol.Name;
             var type = fieldSymbol.Type.Name;
-            return GetAttributeDataByName(fieldAttribute!, name, type);
+            return GetAttributeDataByName(fieldAttribute!, name, type, location);
         }
 
         return null;
     }
 
-    private BaseAttributeData? GetAttributeDataByName(AttributeData attribute, string name, string type)
+    private BaseAttributeData? GetAttributeDataByName(AttributeData attribute, string name, string type, Location? location)
     {
         if (attribute.AttributeClass?.MetadataName == GetNodeAttributeSource.Name)
         {
-            return new GetNodeAttributeData(name, type, attribute!);
+            return new GetNodeAttributeData(name, type, attribute!, location);
         }
 
         if (attribute.AttributeClass?.MetadataName == GetResAttributeSource.Name)

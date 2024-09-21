@@ -1,3 +1,5 @@
-﻿namespace GodotAutoOnReady.SourceGenerator.Diagnostics;
+﻿using Microsoft.CodeAnalysis;
 
-internal record struct DiagnosticMessage(string Title, string Message);
+namespace GodotAutoOnReady.SourceGenerator.Diagnostics;
+
+internal record struct DiagnosticMessage(string Title, string Message, int Id, DiagnosticSeverity Severity);

@@ -148,21 +148,21 @@ internal class SourceGeneratorTestHelpers
         // Including the stepName in error messages to make it easy to isolate issues
         var because = $"{stepName} shouldn't contain banned symbols";
         var visited = new HashSet<object>();
+        var toVisit = new Stack<object>();
 
         // Check all of the outputs
         foreach (var (obj, _) in runStep.Outputs)
         {
-            Visit(obj);
+            toVisit.Push(obj);
         }
 
-        void Visit(object node)
+        while(toVisit.TryPop(out var node))
         {
-            if (node is null || !visited.Add(node))
+            if(node is null || visited.Contains(node))
             {
-                return;
+                continue;
             }
 
-            // Make sure it's not a banned type
             node.Should()
                 .NotBeOfType<Compilation>(because)
                 .And.NotBeOfType<ISymbol>(because)
@@ -172,7 +172,7 @@ internal class SourceGeneratorTestHelpers
             Type type = node.GetType();
             if (type.IsPrimitive || type.IsEnum || type == typeof(string))
             {
-                return;
+                continue;
             }
 
             // If the object is a collection, check each of the values
@@ -180,21 +180,21 @@ internal class SourceGeneratorTestHelpers
             {
                 foreach (object element in collection)
                 {
-                    // recursively check each element in the collection
-                    Visit(element);
+                    // Check each element in the collection
+                    toVisit.Push(element);
                 }
 
-                return;
+                continue;
             }
 
-            // Recursively check each field in the object
+            // Check each field in the object
             foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 var fieldValue = field.GetValue(node);
 
-                if(fieldValue is not null)
+                if (fieldValue is not null)
                 {
-                    Visit(fieldValue);
+                    toVisit.Push(fieldValue);
                 }
             }
         }
