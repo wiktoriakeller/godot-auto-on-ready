@@ -1,0 +1,11 @@
+﻿<Project Sdk="Godot.NET.Sdk/4.3.0">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <RootNamespace>godot3ddogethecreeps</RootNamespace>
+		<Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="GodotAutoOnReady.SourceGenerator" Version="0.15.22" />
+    </ItemGroup>
+</Project>

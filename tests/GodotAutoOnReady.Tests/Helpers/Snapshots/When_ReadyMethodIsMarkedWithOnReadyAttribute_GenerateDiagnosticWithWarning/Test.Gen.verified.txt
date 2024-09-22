@@ -1,0 +1,87 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+    [OnReady]
+    private void _Ready() //Don't invoke in setup
+                 ^^^^^^
+    {
+*/
+ : (15,17)-(15,23),
+      Message: _Ready method can't be marked with OnReady attribute,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: GAOR001,
+        Title: _Ready method can't be marked with OnReady attribute,
+        MessageFormat: _Ready method can't be marked with OnReady attribute,
+        Category: Design,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+
+[GenerateOnReady]
+^^^^^^^^^^^^^^^^^
+public partial class Sword : Node
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+{
+^
+    [GetNode("%SomeProp")]
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public DummyNode Node { get; set; } = null!;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    [GetNode("%SomeField")]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    private DummyNode Field = null!;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    [OnReady]
+^^^^^^^^^^^^^
+    private void _Ready() //Don't invoke in setup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    {
+^^^^^
+        
+^^^^^^^^
+    }
+^^^^^
+
+
+    [OnReady]
+^^^^^^^^^^^^^
+    private void InvokeInReady1()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    {
+^^^^^
+        
+^^^^^^^^
+    }
+^^^^^
+}
+^
+*/
+ : (5,0)-(25,1),
+      Message:
+_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
+Fields setup was generated in OnReadySetup method.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: GAOR002,
+        Title: Default constructor or _Ready method is already declared,
+        MessageFormat:
+_Ready method was not generated because a default constructor or a _Ready method is already declared and no custom setup method name was provided.
+Fields setup was generated in OnReadySetup method.,
+        Category: Design,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

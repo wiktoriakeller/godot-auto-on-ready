@@ -401,7 +401,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 ./artifacts
-/GodotSourceGenerators.SourceGenerators/nuget.sourcegen.config
+**/nuget.godot-demo.config
 
 # Verify
 *.received.*
