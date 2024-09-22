@@ -26,5 +26,5 @@ jobs:
       - name: Test
         run: dotnet test tests/GodotAutoOnReady.Tests/GodotAutoOnReady.Tests.csproj --no-restore --verbosity normal
       - name: Build Godot example project
-        run: dotnet build \examples\godot-3d-doge-the-creeps.sln --configuration Release
+        run: dotnet build \examples\godot-3d-doge-the-creeps.csproj --configuration Release
       
