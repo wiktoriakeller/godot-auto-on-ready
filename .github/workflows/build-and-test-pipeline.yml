@@ -20,8 +20,11 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet .\GodotAutoOnReady.sln restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build .\GodotAutoOnReady.sln --configuration Release --no-restore
       - name: Test
         run: dotnet test tests/GodotAutoOnReady.Tests/GodotAutoOnReady.Tests.csproj --no-restore --verbosity normal
+      - name: Build Godot example project
+        run: dotnet build \godot-examples\godot-3d-doge-the-creeps.sln --configuration Release --no-restore
+      
