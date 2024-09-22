@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore dependencies
-        run: dotnet .\GodotAutoOnReady.sln restore
+        run: dotnet restore .\GodotAutoOnReady.sln
       - name: Build
         run: dotnet build .\GodotAutoOnReady.sln --configuration Release --no-restore
       - name: Test
