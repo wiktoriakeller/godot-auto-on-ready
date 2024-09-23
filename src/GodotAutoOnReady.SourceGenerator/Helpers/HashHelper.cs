@@ -16,6 +16,13 @@ internal static class HashHelper
             sb.Append(bytes[i].ToString("x2"));
         }
 
-        return sb.ToString();
+        var hashValue = sb.ToString();
+
+        if (!char.IsLetter(hashValue[0]))
+        {
+            hashValue = $"_{hashValue.Substring(1)}";
+        }
+
+        return hashValue;
     }
 }
