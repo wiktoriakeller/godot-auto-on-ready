@@ -11,12 +11,12 @@ namespace RPGGame
 {
 	public partial class Sword : Node
 	{
-		private Sword()
+		protected Sword()
 		{
-			Ready += e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady;
+			Ready += e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady_Sword;
 		}
 
-		private void e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady()
+		private void e5c9d7030bada2fe792ad7e4a26ca44379a73f3fe16805ac1359e46759a1571a_OnReady_Sword()
 		{
 			_Ready();
 		}

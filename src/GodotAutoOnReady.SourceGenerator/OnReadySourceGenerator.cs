@@ -176,10 +176,11 @@ public class OnReadySourceGenerator : IIncrementalGenerator
 
         if(onReadyData.GenerateReadyMethod)
         {
-            string readySignalHandler = HashHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady";
+            var nameLength = onReadyData.ClassName.Length < 5 ? onReadyData.ClassName.Length : 5;
+            string readySignalHandler = HashHelper.ComputeHash(onReadyData.AssemblyName) + "_OnReady_" + onReadyData.ClassName.Substring(0, nameLength);
 
             //Generate constructor with OnReady handler
-            builder.AddMethod("private", onReadyData.ClassName)
+            builder.AddMethod("protected", onReadyData.ClassName)
                 .AddMethodContent($"Ready += {readySignalHandler};");
 
             //Generate OnReady handler, that calls _Ready method
